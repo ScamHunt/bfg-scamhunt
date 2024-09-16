@@ -1,24 +1,39 @@
 import logging
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, ConversationHandler
 import os
 from dotenv import load_dotenv
-from bot.link.response import handle_link
+# from bot.link.response import handle_link
+import bot.handler as handler
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# 'Logging in' the bot with its token
 load_dotenv() 
-bot_token = os.environ['TELEGRAM_BOT_TOKEN']
-app = ApplicationBuilder().token(bot_token).build()
+bot_token = os.environ["TELEGRAM_BOT_TOKEN"]
+application = ApplicationBuilder().token(bot_token).build()
+
+conv_handler = ConversationHandler(
+    entry_points=[CommandHandler("report", handler.handle_report)],
+    states={
+        handler.REPORT_TYPE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_report_type)],
+        handler.DETAILS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_report_details)],
+        handler.CONFIRMATION: [CommandHandler("confirm", handler.handle_report_confirmation)],
+    },
+    fallbacks=[CommandHandler("cancel", handler.cancel)],
+)
 
 
-# Function for the /start command
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
-
-
-def main():
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_link))
-    app.run_polling()
+def main():    
+    # Command Handlers
+    application.add_handler(CommandHandler("start", handler.start))
+    application.add_handler(CommandHandler("menu", handler.menu))
+    application.add_handler(CommandHandler("info", handler.info))
+    application.add_handler(CommandHandler("stats", handler.stats))
+    application.add_handler(CommandHandler("help", handler.help))
+    # Conversation Handlers
+    application.add_handler(conv_handler)
+    # Message Handlers
+    application.add_handler(MessageHandler(filters.ATTACHMENT, handler.handle_attachment))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_general))
+    application.add_error_handler(handler.error_handler)
+    # Run the bot
+    application.run_polling()
