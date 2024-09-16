@@ -16,3 +16,14 @@ Bot name: [@ScamHuntSgBot](https://t.me/ScamHuntSgBot)
 4. `pip install -r requirements.txt`
 
 5. `python run.py`
+
+
+## Run with Docker
+
+`docker build -t scamhunt .`
+
+`docker run -d -p 8080:8080 scamhunt`
+
+## Deploy
+
+`fly deploy`
