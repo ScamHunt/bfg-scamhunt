@@ -3,8 +3,6 @@ from telegram.ext import ContextTypes, ConversationHandler
 from .utils import extract_entities
 import logging
 from .link import handle_link
-from .instagram import extract_post_info
-import json
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
 
