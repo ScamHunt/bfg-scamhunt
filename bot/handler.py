@@ -4,9 +4,12 @@ from .utils import extract_entities
 import logging
 from .link import extract_link_data, SocialMedia
 from .instagram import extract_post_info
+from .messages import ScamHuntMessages
 import json
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
+# Define states for the conversation flow
+REPORT, FEEDBACK, COMMENT, LEARN, SCAMABOUT = range(5)
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -146,6 +149,8 @@ async def handle_attachment(update: Update, context: ContextTypes.DEFAULT_TYPE):
         attachment_type = "Voice"
     elif update.message.video_note:
         attachment_type = "Video Note"
+    elif update.message.contact:
+        attachment_type = "Contact"
     
     await update.message.reply_text(
         f"You've shared a {attachment_type}. This could be valuable evidence.\n"
@@ -195,3 +200,124 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"An error occurred\n"
         "I apologize for the inconvenience. Please try again later or contact support."
     )
+
+
+# New handlers
+
+# Initialize the ScamHuntMessages class
+messages = ScamHuntMessages()
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /start command."""
+    await update.message.reply_text(messages.start_message)
+    return REPORT
+
+async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle scam reporting process."""
+    await update.message.reply_text(messages.new_scam_report)
+    return REPORT
+
+async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle when user sends a link for a scam."""
+    phone_numbers, links = extract_entities(update)
+    links = ", ".join(links)
+    await update.message.reply_text(messages.link_sharing.replace("<link>", links))
+    # Simulate analysis
+    context.user_data["link"] = links
+    keyboard = [
+    [
+        InlineKeyboardButton("Facebook 👨", callback_data="facebook"),
+        InlineKeyboardButton("Instagram 📸", callback_data="instagram"),
+    ],
+    [InlineKeyboardButton("Other", callback_data="other")],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("How did you spot this scam?", reply_markup=reply_markup)
+    return SCAMABOUT
+
+async def button_callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle the callback query from the inline keyboard."""
+    query = update.callback_query
+    await query.answer()
+    await query.edit_message_text(text=f"You found this scam on {query.data}.\n\nThank you for your help!"+messages.ask_scam_about)
+    return SCAMABOUT
+
+async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle when user sends a screenshot for a scam."""
+    await update.message.reply_text(messages.screenshot_sharing.replace("<platform name>", "social media"))
+    return SCAMABOUT
+
+async def scamabout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle the /scamabout command where users provide more scam details."""
+    await update.message.reply_text(messages.scamabout)
+    return SCAMABOUT
+
+async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle feedback request."""
+    await update.message.reply_text(messages.feedback)
+    return FEEDBACK
+
+async def comment(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle additional comments after feedback."""
+    await update.message.reply_text(messages.feedback_rating)
+    return COMMENT
+
+async def receive_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Capture feedback."""
+    user_feedback = update.message.text
+    await update.message.reply_text(messages.feedback_rating)
+    return ConversationHandler.END
+
+async def mystats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /mystats command."""
+    await update.message.reply_text(messages.leadership)
+    return ConversationHandler.END
+
+async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /leaderboard command."""
+    await update.message.reply_text(messages.leadership)
+    return ConversationHandler.END
+
+async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /learn command."""
+    await update.message.reply_text(messages.education)
+    return LEARN
+
+async def referral(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /invite command."""
+    await update.message.reply_text(messages.referral)
+    return ConversationHandler.END
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle /help command."""
+    await update.message.reply_text(messages.help)
+    return ConversationHandler.END
+
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle the cancel command."""
+    await update.message.reply_text("🚫 Conversation canceled. If you want to hunt scams again, just send /start.")
+    return ConversationHandler.END
+
+async def scamabout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle the scamabout command."""
+    await update.message.reply_text(messages.scam_about)
+    return SCAMABOUT
+
+async def confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle the confirmation command."""
+    await update.message.reply_text(messages.confirmation)
+    await update.message.reply_text(messages.feedback)
+    return ConversationHandler.END
+
+async def receive_phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle when user sends a phone number for a scam."""
+    phone_numbers, links = extract_entities(update)
+    await update.message.reply_text(messages.phone_number_sharing)
+    context.user_data["phone_number"] = phone_numbers
+    return SCAMABOUT
+
+async def link_unsure(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle when user sends a link for a scam."""
+    await update.message.reply_text(messages.link_unsure)
+    return REPORT
