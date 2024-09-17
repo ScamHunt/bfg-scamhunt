@@ -4,6 +4,14 @@ on:
     branches:
       - main
 jobs:
+  create_env:
+    name: Create env
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}" > .env
+
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
