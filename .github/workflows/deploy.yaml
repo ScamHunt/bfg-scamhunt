@@ -9,10 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          echo "TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}" > .env
+      - name: Create .env file
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          echo "TELEGRAM_BOT_TOKEN='${TELEGRAM_BOT_TOKEN}'" > .env
 
   deploy:
+    needs: [create_env]
     name: Deploy app
     runs-on: ubuntu-latest
     concurrency: deploy-group    # optional: ensure only one action runs at a time
