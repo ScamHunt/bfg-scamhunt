@@ -1,2 +1,4 @@
 fly.toml
 .venv
+.github
+.gitignore
