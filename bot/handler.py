@@ -2,7 +2,7 @@ from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
 from .utils import extract_entities
 import logging
-from .link import extract_link_data, SocialMedia
+from .link import handle_link
 from .instagram import extract_post_info
 import json
 
@@ -164,30 +164,8 @@ async def handle_general(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"I've detected a phone number in your message: {number}\n"
         )
     for link in links:
-        link_data = extract_link_data(link)
-        if link_data.social_media == SocialMedia.INSTAGRAM:
-            await update.message.reply_text(
-                f"I've detected an Instagram link in your message: {link}\n"
-                "Let me analyse it further..."
-            )
-            try:
-                info = await extract_post_info(link_data.post_id)
-                print(info)
-                res = json.dumps(info.dict(), indent=4, sort_keys=True, default=str)
-                await update.message.reply_text(res)
-            except Exception as e:
-                logging.error(e)
-                if e == "login_required":
-                    await update.message.reply_text(
-                        "This Instagram post is private, you can try submitting a screenshot instead.")
-                else:
-                    await update.message.reply_text(
-                        "I could not analyse this link right now, you can try again later.")
-        else:
-            await update.message.reply_text(
-                f"I've detected a link in your message: {link}\n"
-                "I can't analyse this link at the moment, please be cautious."
-            )
+        await handle_link(update, link)
+
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.error(f"An error occurred: {context.error}")
