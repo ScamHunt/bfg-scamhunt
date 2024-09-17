@@ -15,6 +15,7 @@ class SocialMedia(Enum):
 
 
 def extract_platform(link) -> SocialMedia:
+    """Extracts the social media platform from a given link."""
     url = urlparse(link)
     domain = str.lower(url.netloc)
     if 'instagram' in domain:

@@ -4,6 +4,7 @@ from .utils import extract_entities
 import logging
 from .link import SocialMedia, handle_link
 from .messages import ScamHuntMessages
+from .facebook import handle_facebook
 import json
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
@@ -201,6 +202,7 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     await update.message.reply_text(messages.link_sharing.replace("<link>", links))
     # Simulate analysis
     context.user_data["link"] = links
+    fb = await handle_facebook()
     keyboard = [
     [
         InlineKeyboardButton("Facebook 👨", callback_data="facebook"),
