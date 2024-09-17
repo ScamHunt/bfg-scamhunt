@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import bot.handler as handler
 
 
-load_dotenv() 
+load_dotenv('.env', override=True) 
 bot_token = os.environ["TELEGRAM_BOT_TOKEN"]
 application = ApplicationBuilder().token(bot_token).build()
 

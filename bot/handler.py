@@ -1,7 +1,10 @@
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
-from .utils import is_scam, extract_entities
+from .utils import extract_entities
 import logging
+from .link import extract_link_data, SocialMedia
+from .instagram import extract_post_info
+import json
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
 
@@ -11,8 +14,8 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 # Command Handlers
 # Function for the /start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_document(
-        document=open('assets/gifs/pudgy_scam.gif', 'rb'),
+    await update.message.reply_animation(
+        animation=open('assets/gifs/pudgy_scam.gif', 'rb'),
         caption=f"Hello {update.effective_user.first_name}!\n"
                 "Welcome to the ScamHunt Bot!\n"
                 "I'm here to help you report scams and protect yourself and others from them.\n"
@@ -161,15 +164,29 @@ async def handle_general(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"I've detected a phone number in your message: {number}\n"
         )
     for link in links:
-        if is_scam(link):
+        link_data = extract_link_data(link)
+        if link_data.social_media == SocialMedia.INSTAGRAM:
             await update.message.reply_text(
-                f"I've detected a scam link in your message: {link}\n"
-                "This link is known to be malicious. Please be cautious and do not click on it."
+                f"I've detected an Instagram link in your message: {link}\n"
+                "Let me analyse it further..."
             )
+            try:
+                info = await extract_post_info(link_data.post_id)
+                print(info)
+                res = json.dumps(info.dict(), indent=4, sort_keys=True, default=str)
+                await update.message.reply_text(res)
+            except Exception as e:
+                logging.error(e)
+                if e == "login_required":
+                    await update.message.reply_text(
+                        "This Instagram post is private, you can try submitting a screenshot instead.")
+                else:
+                    await update.message.reply_text(
+                        "I could not analyse this link right now, you can try again later.")
         else:
             await update.message.reply_text(
                 f"I've detected a link in your message: {link}\n"
-                "This link is not known to be malicious."
+                "I can't analyse this link at the moment, please be cautious."
             )
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
