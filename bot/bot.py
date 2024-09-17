@@ -1,39 +1,69 @@
-import logging
-from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, ConversationHandler
-import os
-from dotenv import load_dotenv
-# from bot.link.response import handle_link
-import bot.handler as handler
-
-
-load_dotenv('.env', override=True) 
-bot_token = os.environ["TELEGRAM_BOT_TOKEN"]
-application = ApplicationBuilder().token(bot_token).build()
-
-conv_handler = ConversationHandler(
-    entry_points=[CommandHandler("report", handler.handle_report)],
-    states={
-        handler.REPORT_TYPE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_report_type)],
-        handler.DETAILS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_report_details)],
-        handler.CONFIRMATION: [CommandHandler("confirm", handler.handle_report_confirmation)],
-    },
-    fallbacks=[CommandHandler("cancel", handler.cancel)],
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import (
+    Application, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler, CallbackQueryHandler
 )
 
+from dotenv import load_dotenv
+import os
+import bot.handler as handler
 
-def main():    
-    # Command Handlers
-    application.add_handler(CommandHandler("start", handler.start))
-    application.add_handler(CommandHandler("menu", handler.menu))
-    application.add_handler(CommandHandler("info", handler.info))
-    application.add_handler(CommandHandler("stats", handler.stats))
-    application.add_handler(CommandHandler("help", handler.help))
-    # Conversation Handlers
+load_dotenv()
+
+bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+
+
+def main():
+    """Start the bot."""
+    # Create the Application and pass it your bot's token
+    application = Application.builder().token(bot_token).build()
+
+    # Define a ConversationHandler with states and callback functions
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', handler.start), 
+                      CommandHandler('hunt', handler.report), 
+                      CommandHandler('report', handler.report), 
+                      MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Entity("url"), handler.receive_link),
+                      MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Entity("phone_number"), handler.receive_phone_number),
+                      ],
+        states={
+            handler.REPORT: [
+                CommandHandler('report', handler.report),
+                CommandHandler('hunt', handler.report),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Entity("url"), handler.receive_link),
+                MessageHandler(filters.TEXT & ~filters.COMMAND & filters.Entity("phone_number"), handler.receive_phone_number),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handler.link_unsure),
+                MessageHandler(filters.PHOTO, handler.receive_screenshot)
+            ],
+            handler.SCAMABOUT: [
+                CommandHandler('scamabout', handler.scamabout)
+            ],
+            handler.FEEDBACK: [
+                CommandHandler('feedback', handler.feedback),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handler.receive_feedback)
+            ],
+            handler.COMMENT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handler.comment)
+            ],
+            handler.LEARN: [
+                CommandHandler('learn', handler.learn)
+            ],
+        },
+        fallbacks=[CommandHandler('cancel', handler.cancel), CommandHandler('confirm', handler.confirmation)],
+    )
+
+    application.add_handler(CallbackQueryHandler(handler.button_callback_handler))
+    # Add the conversation handler to the application
     application.add_handler(conv_handler)
-    # Message Handlers
-    application.add_handler(MessageHandler(filters.ATTACHMENT, handler.handle_attachment))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_general))
-    application.add_error_handler(handler.error_handler)
-    # Run the bot
+
+    # Add other handlers for independent commands
+    application.add_handler(CommandHandler('start', handler.start))
+    application.add_handler(CommandHandler('mystats', handler.mystats))
+    application.add_handler(CommandHandler('leaderboard', handler.leaderboard))
+    application.add_handler(CommandHandler('invite', handler.referral))
+    application.add_handler(CommandHandler('help', handler.help_command))
+
+    # Start the Bot
     application.run_polling()
+
+if __name__ == '__main__':
+    main()

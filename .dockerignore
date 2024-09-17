@@ -2,3 +2,4 @@ fly.toml
 .venv
 .github
 .gitignore
+.vscode
