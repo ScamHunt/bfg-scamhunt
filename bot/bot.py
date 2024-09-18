@@ -16,7 +16,7 @@ import bot.handler as handler
 
 load_dotenv()
 
-bot_token = os.getenv("TELEGRAM_STG_BOT_TOKEN")
+bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 def main():
