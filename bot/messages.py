@@ -95,7 +95,7 @@ class ScamHuntMessages:
         self.confirm = "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
         self.end_message= "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"
         # Learn messages
-        self.learn_message = (
+        self.learn = (
         "🎓 *Want to learn more about scams?*\n\n"
         "Visit https://t.me/ncpcscamalert for regular updates about scams in Singapore and different scam types.\n\n"
         "Stay informed to stay safe! 🛡️"
