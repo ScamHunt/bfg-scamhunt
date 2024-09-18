@@ -173,7 +173,7 @@ async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
 async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /learn command."""
-    await update.message.reply_text(messages.education)
+    await update.message.reply_text(messages.learn, parse_mode="Markdown")
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
