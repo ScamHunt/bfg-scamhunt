@@ -5,13 +5,19 @@ from urllib.parse import urlparse
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from .instagram import handle_instagram
+
+from . import instagram
+from . import facebook
 
 
 class SocialMedia(Enum):
     FACEBOOK = 1
     INSTAGRAM = 2
     UNKNOWN = 3
+
+
+class Exceptions:
+    UnknownPlatform = "We don't support this platform yet"
 
 
 def extract_platform(link) -> SocialMedia:
@@ -26,18 +32,14 @@ def extract_platform(link) -> SocialMedia:
 
 
 # Function to handle the incoming link
-async def handle_link(update: Update, link):
+async def extract_data(link):
     logging.info(f"Received link: {link}")
 
     platform = extract_platform(link)
 
     if platform == SocialMedia.INSTAGRAM:
-        await handle_instagram(update, link)
+        return await instagram.handle(link)
     elif platform == SocialMedia.FACEBOOK:
-        await update.message.reply_text(
-            "I am unable to analyse Facebook links for now, please be cautious."
-        )
+        return await facebook.handle(link)
     else:
-        await update.message.reply_text(
-            "I am unable to analyse this platform for now, please be cautious."
-        )
+        return (None, Exceptions.UnknownPlatform)
