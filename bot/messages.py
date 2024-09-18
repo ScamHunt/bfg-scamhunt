@@ -44,7 +44,7 @@ class ScamHuntMessages:
             "Use /scamlink to add a link!"
         )
         self.new_scam_report = (
-            "📢 **Welcome to ScamHunt!** Drop your link or image to report a scam and help fight back! 🕵️‍♀️"
+            "📢 **Welcome to ScamHunt!** Drop a link to an Instagram/Facebook post or send a screenshot of the post to report a scam and help fight back! 🕵️‍♀️"
         )
         self.confirmation = (
             "🎉 **Thanks for keeping Singapore safe from scams!** You're making a real difference! 🙌\n\n"
