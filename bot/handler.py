@@ -80,11 +80,11 @@ async def button_callback_handler(
             )
         case CallbackData.CANCEL:
             await query.edit_message_text(
-                text=messages.cancel,
+                text=messages.cancel+messages.end_message,
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
-            await query.edit_message_text(text=messages.confirm, parse_mode="Markdown")
+            await query.edit_message_text(text=messages.confirm+messages.end_message, parse_mode="Markdown")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -111,9 +111,10 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     context.user_data["link"] = links
     data, exception = await link.extract_data(links)
     if data:
-        await update.message.reply_text(data)
+        await update.message.reply_text(str(data), reply_markup=get_inline_cancel_confirm_keyboard())
     else:
-        await update.message.reply_text(exception)
+        await update.message.reply_text(exception+messages.end_message)
+        
 
 
 async def receive_phone_number(
@@ -122,9 +123,11 @@ async def receive_phone_number(
     """Handle when user sends a phone number for a scam."""
     phone_numbers = extract_phone_numbers(update)
     context.user_data["scam_type"] = ScamType.PHONE_NUMBER
+    phone_numbers = ", ".join(phone_numbers)
     await update.message.reply_text(
         messages.phone_number_sharing.replace("<phone_number>", phone_numbers),
         reply_markup=get_inline_cancel_confirm_keyboard(),
+        parse_mode="Markdown"
     )
 
 
@@ -176,19 +179,7 @@ async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /help command."""
     await update.message.reply_text(messages.help)
-
-
-async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Handle the cancel command."""
-    await update.message.reply_text(
-        "🚫 Conversation canceled. If you want to hunt scams again, just send /start"
-    )
-
-
-async def confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Handle the confirmation command."""
-    await update.message.reply_text(messages.confirmation)
-
+    
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""

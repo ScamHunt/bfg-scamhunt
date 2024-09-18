@@ -11,7 +11,6 @@ from telegram.ext import (
 
 from dotenv import load_dotenv
 import os
-from .handler import ConversationState
 import bot.handler as handler
 
 load_dotenv()
@@ -48,6 +47,7 @@ def main():
     application.add_handler(CommandHandler("mystats", handler.mystats))
     application.add_handler(CommandHandler("leaderboard", handler.leaderboard))
     application.add_handler(CommandHandler("help", handler.help_command))
+    application.add_handler(CommandHandler("learn", handler.learn))
 
     # Error handler
     application.add_error_handler(handler.error_handler)
