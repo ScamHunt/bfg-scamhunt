@@ -61,6 +61,9 @@ def main():
     application.add_handler(CommandHandler('leaderboard', handler.leaderboard))
     application.add_handler(CommandHandler('invite', handler.referral))
     application.add_handler(CommandHandler('help', handler.help_command))
+    
+    # Error handler
+    application.add_error_handler(handler.error_handler)
 
     # Start the Bot
     application.run_polling()

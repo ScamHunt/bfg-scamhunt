@@ -204,13 +204,13 @@ messages = ScamHuntMessages()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /start command."""
-    await update.message.reply_text(messages.start_message)
+    await update.message.reply_text(messages.start_message, parse_mode="MarkdownV2")
     return REPORT
 
 
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle scam reporting process."""
-    await update.message.reply_text(messages.new_scam_report)
+    await update.message.reply_text(messages.new_scam_report, parse_mode="MarkdownV2")
     return REPORT
 
 
@@ -218,7 +218,7 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     """Handle when user sends a link for a scam."""
     phone_numbers, links = extract_entities(update)
     links = ", ".join(links)
-    await update.message.reply_text(messages.link_sharing.replace("<link>", links))
+    await update.message.reply_text(messages.link_sharing.replace("<link>", links), parse_mode="MarkdownV2")
     # Simulate analysis
     context.user_data["link"] = links
     await handle_link(update, links)
@@ -232,8 +232,8 @@ async def button_callback_handler(
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
-        text=f"You found this scam on {query.data}.\n\nThank you for your help!"
-        + messages.ask_scam_about
+        text=f"You found this scam on {query.data}.\n\nThank you for your help\!"
+        + messages.ask_scam_about, parse_mode="MarkdownV2"
     )
     return SCAMABOUT
 
@@ -241,84 +241,86 @@ async def button_callback_handler(
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
     await update.message.reply_text(
-        messages.screenshot_sharing.replace("<platform name>", "social media")
+        messages.screenshot_sharing.replace("<platform name>", "social media"), 
+        parse_mode="MarkdownV2"
     )
     return SCAMABOUT
 
 
 async def scamabout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the /scamabout command where users provide more scam details."""
-    await update.message.reply_text(messages.scamabout)
+    await update.message.reply_text(messages.scamabout, parse_mode="MarkdownV2")
     return SCAMABOUT
 
 
 async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle feedback request."""
-    await update.message.reply_text(messages.feedback)
+    await update.message.reply_text(messages.feedback, parse_mode="MarkdownV2")
     return FEEDBACK
 
 
 async def comment(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle additional comments after feedback."""
-    await update.message.reply_text(messages.feedback_rating)
+    await update.message.reply_text(messages.feedback_rating, parse_mode="MarkdownV2")
     return COMMENT
 
 
 async def receive_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Capture feedback."""
     user_feedback = update.message.text
-    await update.message.reply_text(messages.feedback_rating)
+    await update.message.reply_text(messages.feedback_rating, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
 async def mystats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /mystats command."""
-    await update.message.reply_text(messages.leadership)
+    await update.message.reply_text(messages.leadership, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
 async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /leaderboard command."""
-    await update.message.reply_text(messages.leadership)
+    await update.message.reply_text(messages.leadership, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
 async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /learn command."""
-    await update.message.reply_text(messages.education)
+    await update.message.reply_text(messages.education, parse_mode="MarkdownV2" )
     return LEARN
 
 
 async def referral(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /invite command."""
-    await update.message.reply_text(messages.referral)
+    await update.message.reply_text(messages.referral, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /help command."""
-    await update.message.reply_text(messages.help)
+    await update.message.reply_text(messages.help, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the cancel command."""
     await update.message.reply_text(
-        "🚫 Conversation canceled. If you want to hunt scams again, just send /start."
+        "🚫 Conversation canceled. If you want to hunt scams again, just send /start.",
+        parse_mode="MarkdownV2"
     )
     return ConversationHandler.END
 
 
 async def scamabout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the scamabout command."""
-    await update.message.reply_text(messages.scam_about)
+    await update.message.reply_text(messages.scam_about, parse_mode="MarkdownV2")
     return SCAMABOUT
 
 
 async def confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the confirmation command."""
-    await update.message.reply_text(messages.confirmation)
-    await update.message.reply_text(messages.feedback)
+    await update.message.reply_text(messages.confirmation, parse_mode="MarkdownV2")
+    await update.message.reply_text(messages.feedback, parse_mode="MarkdownV2")
     return ConversationHandler.END
 
 
@@ -327,12 +329,12 @@ async def receive_phone_number(
 ) -> int:
     """Handle when user sends a phone number for a scam."""
     phone_numbers, links = extract_entities(update)
-    await update.message.reply_text(messages.phone_number_sharing)
+    await update.message.reply_text(messages.phone_number_sharing, parse_mode="MarkdownV2")
     context.user_data["phone_number"] = phone_numbers
     return SCAMABOUT
 
 
 async def link_unsure(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a link for a scam."""
-    await update.message.reply_text(messages.link_unsure)
+    await update.message.reply_text(messages.link_unsure, parse_mode="MarkdownV2")
     return REPORT
