@@ -19,6 +19,8 @@ class Data:
     def __init__(self, username: str, caption: str):
         self.username = username
         self.caption = caption
+    def __str__(self):
+        return f"Username: {self.username}\nCaption: {self.caption}"
 
 
 async def handle(link: str) -> tuple[Data, Exceptions]:
