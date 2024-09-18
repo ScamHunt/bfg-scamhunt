@@ -7,6 +7,7 @@ Bot name: [@ScamHuntSgBot](https://t.me/ScamHuntSgBot)
 1. Create `.env` file with these values
     ```
     TELEGRAM_BOT_TOKEN=<token>
+    OPENAI_API_KEY=<token>
     ```
 
 2. `python -m venv .venv`

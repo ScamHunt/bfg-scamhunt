@@ -1,10 +1,17 @@
-from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import (
+    Update,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from telegram.ext import ContextTypes, ConversationHandler
 from .utils import extract_entities
 import logging
 from .link import SocialMedia, handle_link
 from .messages import ScamHuntMessages
 from .facebook import handle_facebook
+from .photo import handle_photo
 import json
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
@@ -23,7 +30,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 "Welcome to the ScamHunt Bot!\n"
                 "I'm here to help you report scams and protect yourself and others from them.\n"
                 "Please use the /report command to start reporting a scam.")
-    
+
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
@@ -224,6 +231,7 @@ async def button_callback_handler(update: Update, context: ContextTypes.DEFAULT_
 
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
+    handle_photo(update.message.photo)
     await update.message.reply_text(messages.screenshot_sharing.replace("<platform name>", "social media"))
     return SCAMABOUT
 

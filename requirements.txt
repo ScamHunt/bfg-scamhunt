@@ -10,6 +10,7 @@ cssselect==1.2.0
 dateparser==1.2.0
 decorator==4.4.2
 demjson3==3.0.6
+distro==1.9.0
 exceptiongroup==1.2.2
 facebook-scraper==0.2.59
 fake-useragent==1.5.1
@@ -20,10 +21,12 @@ idna==3.9
 imageio==2.35.1
 imageio-ffmpeg==0.5.1
 importlib_metadata==8.5.0
+jiter==0.5.0
 lxml==5.3.0
 lxml_html_clean==0.2.2
 moviepy==1.0.3
 numpy==2.1.1
+openai==1.45.1
 orjson==3.10.3
 parse==1.20.2
 pillow==10.4.0
