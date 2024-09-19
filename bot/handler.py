@@ -5,6 +5,8 @@ import logging
 from .link import SocialMedia, handle_link
 from .messages import ScamHuntMessages
 import json
+import mimetypes
+from .ocr import ocr_image,upload_to_supabase
 
 REPORT_TYPE, DETAILS, CONFIRMATION = range(3)
 # Define states for the conversation flow
@@ -222,11 +224,22 @@ async def button_callback_handler(update: Update, context: ContextTypes.DEFAULT_
 
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
+    print(context)
+    image_info =update.message.photo[-1]
+    print(image_info)
+    height = image_info.height
+    width = image_info.width
+    file= await context.bot.get_file(image_info.file_id)
+    file_mimetype = mimetypes.guess_type(file.file_path)
+    file_bytes  = await file.download_as_bytearray()
+    ocr_results = await ocr_image(file_bytes, file_mimetype[0])
+    print(ocr_results)
     await update.message.reply_text(messages.screenshot_sharing.replace("<platform name>", "social media"))
     return SCAMABOUT
 
 async def scamabout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the /scamabout command where users provide more scam details."""
+
     await update.message.reply_text(messages.scamabout)
     return SCAMABOUT
 
