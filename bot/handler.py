@@ -189,7 +189,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
     logging.error(f"Update {update} caused error {context.error}")
-    await update.message.reply_text(messages.error)
+    if update:
+        await update.message.reply_text(messages.error)
+    
 
 
 def get_inline_cancel_confirm_keyboard():
