@@ -15,7 +15,7 @@ import json
 import mimetypes
 from .ocr import ocr_image
 
-from .supabase_utils import upload_to_supabase
+from .db.supabase import supabase
 
 from enum import Enum, auto
 
@@ -118,7 +118,6 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         await update.message.reply_text(str(data), reply_markup=get_inline_cancel_confirm_keyboard())
     else:
         await update.message.reply_text(exception+messages.end_message)
-        
 
 
 async def receive_phone_number(
@@ -138,13 +137,13 @@ async def receive_phone_number(
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
     print(context)
-    image_info =update.message.photo[-1]
+    image_info = update.message.photo[-1]
     print(image_info)
     height = image_info.height
     width = image_info.width
-    file= await context.bot.get_file(image_info.file_id)
+    file = await context.bot.get_file(image_info.file_id)
     file_mimetype = mimetypes.guess_type(file.file_path)
-    file_bytes  = await file.download_as_bytearray()
+    file_bytes = await file.download_as_bytearray()
     ocr_results = await ocr_image(file_bytes, file_mimetype[0])
     print(ocr_results)
     inline_keyboard = [
@@ -194,7 +193,7 @@ async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /help command."""
     await update.message.reply_text(messages.help)
-    
+
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
