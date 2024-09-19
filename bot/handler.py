@@ -14,9 +14,7 @@ from .messages import ScamHuntMessages
 import json
 import mimetypes
 from .ocr import ocr_image
-
-from .supabase_utils import upload_to_supabase
-
+import json
 from enum import Enum, auto
 
 
@@ -137,32 +135,24 @@ async def receive_phone_number(
 
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
-    print(context)
     image_info =update.message.photo[-1]
-    print(image_info)
     height = image_info.height
     width = image_info.width
     file= await context.bot.get_file(image_info.file_id)
     file_mimetype = mimetypes.guess_type(file.file_path)
     file_bytes  = await file.download_as_bytearray()
+    message = await update.message.reply_text("You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown")
     ocr_results = await ocr_image(file_bytes, file_mimetype[0])
-    print(ocr_results)
-    inline_keyboard = [
-        [
-            InlineKeyboardButton(
-                "Instagram Scam", callback_data=CallbackData.INSTAGRAM_SCAM
-            ),
-            InlineKeyboardButton(
-                "Facebook Scam", callback_data=CallbackData.FACEBOOK_SCAM
-            ),
-        ],
-        [
-            InlineKeyboardButton("Other Scam", callback_data=CallbackData.OTHER_SCAM),
-        ],
-    ]
-    await update.message.reply_text(
-        messages.screenshot_sharing, reply_markup=InlineKeyboardMarkup(inline_keyboard)
-    )
+    match ocr_results["platform"]:
+        case "Facebook":
+            await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
+        case "Instagram":
+            await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
+
+    logging.info(json.dumps(ocr_results, indent=2))
+    await update.message.reply_text(ocr_results["description"], reply_markup=get_inline_cancel_confirm_keyboard())
+
+
 
 
 async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
