@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "bfg-scamhunt"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+anyio = "4.4.0"
+certifi = "2024.8.30"
+exceptiongroup = "1.2.2"
+h11 = "0.14.0"
+httpcore = "1.0.5"
+httpx = "0.27.0"
+idna = "3.9"
+python-dotenv = "1.0.1"
+python-telegram-bot = "21.5"
+sniffio = "1.3.1"
+typing-extensions = "4.12.2"
+aiograpi = "0.0.3"
+annotated-types = "0.7.0"
+charset-normalizer = "3.3.2"
+decorator = "4.4.2"
+imageio = "2.35.1"
+imageio-ffmpeg = "0.5.1"
+moviepy = "1.0.3"
+numpy = "2.1.1"
+orjson = "3.10.3"
+pillow = "10.4.0"
+proglog = "0.1.10"
+pycryptodomex = "3.20.0"
+pydantic = "2.7.1"
+pydantic-core = "2.18.2"
+pysocks = "1.7.1"
+requests = "2.32.3"
+tqdm = "4.66.5"
+urllib3 = "2.2.3"
+zstandard = "0.22.0"
+openai = "^1.46.0"
+supabase = "^2.7.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
