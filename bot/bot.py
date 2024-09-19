@@ -12,11 +12,14 @@ from telegram.ext import (
 from dotenv import load_dotenv
 import os
 import bot.handler as handler
+import logging
 
-load_dotenv()
+load_dotenv(override=True)
 
 bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 def main():
     """Start the bot."""
