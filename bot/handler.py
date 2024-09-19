@@ -13,7 +13,9 @@ from . import link
 from .messages import ScamHuntMessages
 import json
 import mimetypes
-from .ocr import ocr_image,upload_to_supabase
+from .ocr import ocr_image
+
+from .supabase_utils import upload_to_supabase
 
 from enum import Enum, auto
 
