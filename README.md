@@ -14,6 +14,8 @@ Fly\.io: https://fly.io/apps/scamhunt
 1. Create `.env` file with these values
     ```
     TELEGRAM_BOT_TOKEN=<token>
+    SUPABASE_URL=<url>
+    SUPABASE_KEY=<key>
     ```
 
 2. `python -m venv .venv`
