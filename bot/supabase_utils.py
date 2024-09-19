@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 from supabase import create_client, Client
 
-load_dotenv()
+load_dotenv(override=True)
 
 url = "https://iyaldvefunvxxmlrerte.supabase.co"
 supabase = create_client(url, os.getenv("SUPABASE_KEY"))

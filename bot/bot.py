@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import os
 import bot.handler as handler
 
-load_dotenv()
+load_dotenv(override=True)
 
 bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
