@@ -2,7 +2,7 @@ import os
 import logging
 from supabase import create_client, Client
 
-url = os.getenv("SUPABASE_URL")
+url = "https://iyaldvefunvxxmlrerte.supabase.co"
 key = os.getenv("SUPABASE_KEY")
 supabase = create_client(supa_url, supa_key)
 
