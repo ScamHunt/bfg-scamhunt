@@ -1,4 +1,4 @@
-OCR_PROMPT  = """
+OCR_PROMPT = """
 You are an expert in optical character recognition (OCR) and social media analysis. Your task is to analyze a potential scam post on social media and extract specific information from it.
 
 First, examine the image data provided:
