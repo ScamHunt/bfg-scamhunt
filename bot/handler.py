@@ -106,6 +106,7 @@ async def button_callback_handler(
                     image = await context.bot.get_file(context.user_data["photo"].file_id)
                     ocr_results = await ocr_image(image)
                     logging.info(json.dumps(ocr_results, indent=2))
+                    context.user_data["state"] = BotStates.START
                     await query.edit_message_text(
                         ocr_results["description"],
                         reply_markup=get_inline_cancel_confirm_keyboard(),
