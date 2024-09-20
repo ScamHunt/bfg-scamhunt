@@ -21,6 +21,7 @@ Your task is to extract the following information:
 14. Whether it's an advertisement or user-generated post
 15. Whether it's sponsored or not
 16. Likelihood of being a scam
+17. social media post or not social media post
 
 Follow these steps to extract the information:
 
@@ -58,7 +59,13 @@ Follow these steps to extract the information:
    - Use of common scam phrases
    - Images or post with evidence of manipulation with photo editing software
 
+17. Social media post or not social media post: Analyze if the post is a social media post. Output "true" if social media post, "false" if not.
+
+
 Before providing your final output, use a <scratchpad> to think through your analysis and reasoning for the scam likelihood rating and double-check your work to ensure there are no mistakes in extracting all of the required information.
+
+<scratchpad>
+</scratchpad>
 
 Provide your final output in the following JSON format:
 
@@ -79,7 +86,8 @@ Provide your final output in the following JSON format:
 "phone_number": "",
 "ad_or_post": "",
 "is_sponsored": "",
-"scam_likelihood": 0
+"scam_likelihood": 0,
+"is_social_media_post": false
 }
 </output>
 

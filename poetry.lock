@@ -664,6 +664,23 @@ files = [
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
+name = "imagehash"
+version = "4.3.1"
+description = "Image Hashing library"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ImageHash-4.3.1-py2.py3-none-any.whl", hash = "sha256:5ad9a5cde14fe255745a8245677293ac0d67f09c330986a351f34b614ba62fb5"},
+    {file = "ImageHash-4.3.1.tar.gz", hash = "sha256:7038d1b7f9e0585beb3dd8c0a956f02b95a346c0b5f24a9e8cc03ebadaf0aa70"},
+]
+
+[package.dependencies]
+numpy = "*"
+pillow = "*"
+PyWavelets = "*"
+scipy = "*"
+
+[[package]]
 name = "imageio"
 version = "2.35.1"
 description = "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats."
@@ -1417,6 +1434,57 @@ socks = ["httpx[socks]"]
 webhooks = ["tornado (>=6.4,<7.0)"]
 
 [[package]]
+name = "pywavelets"
+version = "1.7.0"
+description = "PyWavelets, wavelet transform module"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "pywavelets-1.7.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d99156b461f914cafbe6ee3b511612a83e90061addbe1f2660f522e9841fbdc4"},
+    {file = "pywavelets-1.7.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:953b877c43f1fa53204b1b0eedd04efa6739378a873e79fa34ee5296d47a9ca1"},
+    {file = "pywavelets-1.7.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0fc5e0e592678e43c18dd169b0d8471e9a5ffb5eb7ff4bdc8f447c882f78aa8b"},
+    {file = "pywavelets-1.7.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a469a7e73f5ab1d59b52a525a89a4a280426d1ba08eb081261f8bc6775f101d6"},
+    {file = "pywavelets-1.7.0-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:3740c84de06fab5081c8f08994f12f9ee94dc2eb4d818eaeace3bdb0b838e2fc"},
+    {file = "pywavelets-1.7.0-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:1a550fdbe134040c04f1bb46cfe13a1a903c5dce13090b681106e4db99feba81"},
+    {file = "pywavelets-1.7.0-cp310-cp310-win32.whl", hash = "sha256:d5fc7fbad53379c30b2c9d46c235130a4b96e0597653e32e7680a310da06bd07"},
+    {file = "pywavelets-1.7.0-cp310-cp310-win_amd64.whl", hash = "sha256:0b37212b7524438f694cb619cc4a0a3dc54ad77b63a18d0e8e6364f525fffd91"},
+    {file = "pywavelets-1.7.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:392553248aed33eac6f38647acacdba94dd6a8f283319c2d9852de7a871d6d0f"},
+    {file = "pywavelets-1.7.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:ae3ae86ba69d75327b1c5cd368138fb9329bc7eb7418d6b0ce9504c5070974ef"},
+    {file = "pywavelets-1.7.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d81d2486e4f9b65f7c6cab252f3e706c8e8e72bbd0311f72c1a5ec56c947d257"},
+    {file = "pywavelets-1.7.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:05dc2930cf9b7f61a24b2fe52b18e9d6046012fc46fc360355222781a95a1378"},
+    {file = "pywavelets-1.7.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:8565de589f42283bca17ddca298f1188a26ef8ee75cadc4a4744cadf5a79cfdf"},
+    {file = "pywavelets-1.7.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:8bdab6b1781f01c087c54782d656a4fc1df77796c241f122445adcbb24892839"},
+    {file = "pywavelets-1.7.0-cp311-cp311-win32.whl", hash = "sha256:c7b47d94aefe6e03085f4d9ce74f6133741164d470ac2839af9906686c6c2ed1"},
+    {file = "pywavelets-1.7.0-cp311-cp311-win_amd64.whl", hash = "sha256:3e3c8c0fa44f4de7bf05c5d12883b227aaf6dcf46deb3f6f5a9fa5bb79c33283"},
+    {file = "pywavelets-1.7.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:badb7dc70ecd8042ddd98fdd41803d5e5b28bf7c90910bb1751906812326ab54"},
+    {file = "pywavelets-1.7.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:74e838e0225783f37ae346e60a9f783b4a31adc5731b9cb6d687ee5c93bd87b7"},
+    {file = "pywavelets-1.7.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6ad14d8b5a412a621406276b8ae8ee1e369ba7a7f8e517fb87355bcb8106820f"},
+    {file = "pywavelets-1.7.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0bd2611076f5d2c4ad940421bbb3c450b6a53d8ca24bde02662455dc67c70dac"},
+    {file = "pywavelets-1.7.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:40ebb994b332d48db3b0564e3c335c4f8ba236283939f5167de099766cf16517"},
+    {file = "pywavelets-1.7.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:4a2a8cc39901f09d82fc94007026f9aed63876e334ae043eb26caa601aee2551"},
+    {file = "pywavelets-1.7.0-cp312-cp312-win32.whl", hash = "sha256:0cd599c78fc240cbadb63344d73912fc79e8dccbb0db8a8bd5143df400c3a519"},
+    {file = "pywavelets-1.7.0-cp312-cp312-win_amd64.whl", hash = "sha256:29a912c074977db6adf3782dfbd414945805039b755d0c23979bc823f1b4e9c3"},
+    {file = "pywavelets-1.7.0-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:6a322607b8c2985997ea45317d36cab58f0223ccf4c5b6540b612ed067d099ff"},
+    {file = "pywavelets-1.7.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:0f402424288178fd105a5cb76e1818649dc67e4a08d1b9974c8c7ef01dc5feb3"},
+    {file = "pywavelets-1.7.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:4ff81dd8288afdd5f2eae6c44f963152b41e14e2e5fc647b608c97bd6f8270fe"},
+    {file = "pywavelets-1.7.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:259ccf233879cf0ed66052ffd174dcabe6314e92b53aa2de25f4ae50b08ea1e3"},
+    {file = "pywavelets-1.7.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:105249d2bf824bddfb286e4e08934ff1e8829aa3077dab74ce3b2921a09caa43"},
+    {file = "pywavelets-1.7.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:eac60fdb28bd421f72eb18824bd2e4f36c3dab0d7f4802ebfe4bbf68744a524a"},
+    {file = "pywavelets-1.7.0-cp313-cp313-win32.whl", hash = "sha256:097bd03ee1b687942fa2f82ad0d35849879eef0ac82fc6f757d6ef881c53db6d"},
+    {file = "pywavelets-1.7.0-cp313-cp313-win_amd64.whl", hash = "sha256:71918b973950c013c17ff28c3fc2958dfff68ec767ef60cd927a3ac4ff5a7345"},
+    {file = "pywavelets-1.7.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:5b7e1a212269d3e48318388744684b702c6a649a70758e35e9a88614316e9b91"},
+    {file = "pywavelets-1.7.0-cp313-cp313t-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a0d8c641aa26e040d62166cbe2052dd3cd575e3e0c78c00c52770be6d7dd386b"},
+    {file = "pywavelets-1.7.0-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:e0611ffb6ceeee1b677bd224e657895193eec03ad39538f5263ce61db465f836"},
+    {file = "pywavelets-1.7.0.tar.gz", hash = "sha256:b47250e5bb853e37db5db423bafc82847f4cde0ffdf7aebb06336a993bc174f6"},
+]
+
+[package.dependencies]
+numpy = ">=1.23,<3"
+
+[package.extras]
+optional = ["scipy (>=1.9)"]
+
+[[package]]
 name = "realtime"
 version = "2.0.2"
 description = ""
@@ -1432,6 +1500,23 @@ aiohttp = ">=3.10.2,<4.0.0"
 python-dateutil = ">=2.8.1,<3.0.0"
 typing-extensions = ">=4.12.2,<5.0.0"
 websockets = ">=11,<13"
+
+[[package]]
+name = "replicate"
+version = "0.33.0"
+description = "Python client for Replicate"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "replicate-0.33.0-py3-none-any.whl", hash = "sha256:deb687fe613ca94e750abcc2b51fb398cf9e8c9514e19422173e93596c702a3a"},
+    {file = "replicate-0.33.0.tar.gz", hash = "sha256:79f179aa791072c2141bfc5481b786cdd79e368b53938be7dbd7b07af9c14f6b"},
+]
+
+[package.dependencies]
+httpx = ">=0.21.0,<1"
+packaging = "*"
+pydantic = ">1.10.7"
+typing-extensions = ">=4.5.0"
 
 [[package]]
 name = "requests"
@@ -1453,6 +1538,56 @@ urllib3 = ">=1.21.1,<3"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
+
+[[package]]
+name = "scipy"
+version = "1.14.1"
+description = "Fundamental algorithms for scientific computing in Python"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "scipy-1.14.1-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:b28d2ca4add7ac16ae8bb6632a3c86e4b9e4d52d3e34267f6e1b0c1f8d87e389"},
+    {file = "scipy-1.14.1-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:d0d2821003174de06b69e58cef2316a6622b60ee613121199cb2852a873f8cf3"},
+    {file = "scipy-1.14.1-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:8bddf15838ba768bb5f5083c1ea012d64c9a444e16192762bd858f1e126196d0"},
+    {file = "scipy-1.14.1-cp310-cp310-macosx_14_0_x86_64.whl", hash = "sha256:97c5dddd5932bd2a1a31c927ba5e1463a53b87ca96b5c9bdf5dfd6096e27efc3"},
+    {file = "scipy-1.14.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2ff0a7e01e422c15739ecd64432743cf7aae2b03f3084288f399affcefe5222d"},
+    {file = "scipy-1.14.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8e32dced201274bf96899e6491d9ba3e9a5f6b336708656466ad0522d8528f69"},
+    {file = "scipy-1.14.1-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:8426251ad1e4ad903a4514712d2fa8fdd5382c978010d1c6f5f37ef286a713ad"},
+    {file = "scipy-1.14.1-cp310-cp310-win_amd64.whl", hash = "sha256:a49f6ed96f83966f576b33a44257d869756df6cf1ef4934f59dd58b25e0327e5"},
+    {file = "scipy-1.14.1-cp311-cp311-macosx_10_13_x86_64.whl", hash = "sha256:2da0469a4ef0ecd3693761acbdc20f2fdeafb69e6819cc081308cc978153c675"},
+    {file = "scipy-1.14.1-cp311-cp311-macosx_12_0_arm64.whl", hash = "sha256:c0ee987efa6737242745f347835da2cc5bb9f1b42996a4d97d5c7ff7928cb6f2"},
+    {file = "scipy-1.14.1-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:3a1b111fac6baec1c1d92f27e76511c9e7218f1695d61b59e05e0fe04dc59617"},
+    {file = "scipy-1.14.1-cp311-cp311-macosx_14_0_x86_64.whl", hash = "sha256:8475230e55549ab3f207bff11ebfc91c805dc3463ef62eda3ccf593254524ce8"},
+    {file = "scipy-1.14.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:278266012eb69f4a720827bdd2dc54b2271c97d84255b2faaa8f161a158c3b37"},
+    {file = "scipy-1.14.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fef8c87f8abfb884dac04e97824b61299880c43f4ce675dd2cbeadd3c9b466d2"},
+    {file = "scipy-1.14.1-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:b05d43735bb2f07d689f56f7b474788a13ed8adc484a85aa65c0fd931cf9ccd2"},
+    {file = "scipy-1.14.1-cp311-cp311-win_amd64.whl", hash = "sha256:716e389b694c4bb564b4fc0c51bc84d381735e0d39d3f26ec1af2556ec6aad94"},
+    {file = "scipy-1.14.1-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:631f07b3734d34aced009aaf6fedfd0eb3498a97e581c3b1e5f14a04164a456d"},
+    {file = "scipy-1.14.1-cp312-cp312-macosx_12_0_arm64.whl", hash = "sha256:af29a935803cc707ab2ed7791c44288a682f9c8107bc00f0eccc4f92c08d6e07"},
+    {file = "scipy-1.14.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:2843f2d527d9eebec9a43e6b406fb7266f3af25a751aa91d62ff416f54170bc5"},
+    {file = "scipy-1.14.1-cp312-cp312-macosx_14_0_x86_64.whl", hash = "sha256:eb58ca0abd96911932f688528977858681a59d61a7ce908ffd355957f7025cfc"},
+    {file = "scipy-1.14.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:30ac8812c1d2aab7131a79ba62933a2a76f582d5dbbc695192453dae67ad6310"},
+    {file = "scipy-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8f9ea80f2e65bdaa0b7627fb00cbeb2daf163caa015e59b7516395fe3bd1e066"},
+    {file = "scipy-1.14.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:edaf02b82cd7639db00dbff629995ef185c8df4c3ffa71a5562a595765a06ce1"},
+    {file = "scipy-1.14.1-cp312-cp312-win_amd64.whl", hash = "sha256:2ff38e22128e6c03ff73b6bb0f85f897d2362f8c052e3b8ad00532198fbdae3f"},
+    {file = "scipy-1.14.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:1729560c906963fc8389f6aac023739ff3983e727b1a4d87696b7bf108316a79"},
+    {file = "scipy-1.14.1-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:4079b90df244709e675cdc8b93bfd8a395d59af40b72e339c2287c91860deb8e"},
+    {file = "scipy-1.14.1-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:e0cf28db0f24a38b2a0ca33a85a54852586e43cf6fd876365c86e0657cfe7d73"},
+    {file = "scipy-1.14.1-cp313-cp313-macosx_14_0_x86_64.whl", hash = "sha256:0c2f95de3b04e26f5f3ad5bb05e74ba7f68b837133a4492414b3afd79dfe540e"},
+    {file = "scipy-1.14.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b99722ea48b7ea25e8e015e8341ae74624f72e5f21fc2abd45f3a93266de4c5d"},
+    {file = "scipy-1.14.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5149e3fd2d686e42144a093b206aef01932a0059c2a33ddfa67f5f035bdfe13e"},
+    {file = "scipy-1.14.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:e4f5a7c49323533f9103d4dacf4e4f07078f360743dec7f7596949149efeec06"},
+    {file = "scipy-1.14.1-cp313-cp313-win_amd64.whl", hash = "sha256:baff393942b550823bfce952bb62270ee17504d02a1801d7fd0719534dfb9c84"},
+    {file = "scipy-1.14.1.tar.gz", hash = "sha256:5a275584e726026a5699459aa72f828a610821006228e841b94275c4a7c08417"},
+]
+
+[package.dependencies]
+numpy = ">=1.23.5,<2.3"
+
+[package.extras]
+dev = ["cython-lint (>=0.12.2)", "doit (>=0.36.0)", "mypy (==1.10.0)", "pycodestyle", "pydevtool", "rich-click", "ruff (>=0.0.292)", "types-psutil", "typing_extensions"]
+doc = ["jupyterlite-pyodide-kernel", "jupyterlite-sphinx (>=0.13.1)", "jupytext", "matplotlib (>=3.5)", "myst-nb", "numpydoc", "pooch", "pydata-sphinx-theme (>=0.15.2)", "sphinx (>=5.0.0,<=7.3.7)", "sphinx-design (>=0.4.0)"]
+test = ["Cython", "array-api-strict (>=2.0)", "asv", "gmpy2", "hypothesis (>=6.30)", "meson", "mpmath", "ninja", "pooch", "pytest", "pytest-cov", "pytest-timeout", "pytest-xdist", "scikit-umfpack", "threadpoolctl"]
 
 [[package]]
 name = "setuptools"
@@ -1494,6 +1629,17 @@ python-versions = ">=3.7"
 files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
+]
+
+[[package]]
+name = "snowflake-id"
+version = "1.0.2"
+description = "The Snowflake generator done right"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "snowflake_id-1.0.2-py3-none-any.whl", hash = "sha256:c3142752ed334b9d4632739a704461d13e97aa6fa71b65d5329829b4b5cc058c"},
+    {file = "snowflake_id-1.0.2.tar.gz", hash = "sha256:4a4cd49508599aaa16488311f4b9121e9ac3bac57edff3e9f71b1d79086dbfe8"},
 ]
 
 [[package]]
@@ -1859,4 +2005,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "9a1ec5b7e942a5bf6dd785b9c275581a5818c7ca54c733973585e38fd1b5527d"
+content-hash = "f345268df885bcc6a60989ff162c478810ac4152b16fb596a7cca7b6456b9708"

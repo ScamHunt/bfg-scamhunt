@@ -21,7 +21,9 @@ def img_to_base64(img_bytes:bytearray):
 
 
 async def ocr_image(image_bytes:bytearray, img_type:str) ->dict:
+    print("converting image to base64")
     img_b64_str = img_to_base64(image_bytes)
+    print("sending request to openai")
     response = await client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content":[
@@ -36,7 +38,10 @@ async def ocr_image(image_bytes:bytearray, img_type:str) ->dict:
 
     response_format={ "type": "json_object" }
 )
+    print("response received from openai")
+
     result = json.loads(response.choices[0].message.content)
+
     return result
 
 

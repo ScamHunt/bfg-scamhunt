@@ -14,7 +14,7 @@ from .messages import ScamHuntMessages
 import json
 import mimetypes
 from .ocr import ocr_image
-
+from.img_utils import generate_image_hashes
 from .supabase_utils import upload_to_supabase
 
 from enum import Enum, auto
@@ -146,7 +146,9 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     file_mimetype = mimetypes.guess_type(file.file_path)
     file_bytes  = await file.download_as_bytearray()
     ocr_results = await ocr_image(file_bytes, file_mimetype[0])
-    print(ocr_results)
+    generate_image_hashes(file_bytes,(height,width))
+    snowid  = upload_to_supabase(file_bytes,(height,width), file_mimetype[0])
+    
     inline_keyboard = [
         [
             InlineKeyboardButton(
