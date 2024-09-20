@@ -27,9 +27,12 @@ class ScamHuntMessages:
         )
 
         self.screenshot_sharing = (
-            "🖼️ *Thanks for sharing a scam screenshot!* I'm taking a look... 🔍\n\n"
-            "Thanks for keeping Singapore safe! 🇸🇬\n\n"
-            "Got any more details about this scam? 🤓\n\n"
+            "🖼️ Thanks for sharing a *scam screenshot!*\n\n"
+            "Could you confirm if this is the screenshot of the scam you're reporting?"
+        )
+
+        self.looking_into_scam = (
+            "🔍 I'm looking into this scam. Please wait a moment... \n\n"
         )
 
         self.text_sharing = (
@@ -60,7 +63,7 @@ class ScamHuntMessages:
             "⏰ *It's been a while since your last hunt!* Remember, ignoring a scam only protects you—"
             "reporting it protects everyone! 🔒 Use /report to jump back in! 💼"
         )
-        
+
         self.help = (
             "Singaporeans are losing $1 Million a week to social media scammers. Scamhunt is trying stop them. \n\n"
             "🚨 /hunt or /report to send us suspicious social media links or screenshots \n"
@@ -78,27 +81,19 @@ class ScamHuntMessages:
         self.error = "🚫 *Error!* Please try again. If the problem persists, contact @scamhuntbot"
 
         # Scam types
-        self.facebook_scam = (
-            "🙏 *Thank you for sharing a Facebook screenshot*\n\n"
+        self.scam_type = (
+            "🙏 *Thank you for sharing a <platform> screenshot\n\n"
             "We're looking into this potential Facebook scam. Your report helps keep others safe!"
-        )
-        self.instagram_scam = (
-            "🙏 *Thank you for sharing an Instagram screenshot*\n\n"
-            "We're investigating this potential Instagram scam. Your vigilance is appreciated!"
-        )
-        self.other_scam = (
-            "🙏 *Thank you for sharing this screenshot*\n\n"
-            "We're looking into this potential scam. Your report helps keep others safe!"
         )
 
         self.cancel = "🚫 *Cancelled!* If you need help, use /help or /start"
-        self.confirm = "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
-        self.end_message= "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"
+        self.confirm = (
+            "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
+        )
+        self.end_message = "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"
         # Learn messages
         self.learn = (
-        "🎓 *Want to learn more about scams?*\n\n"
-        "Visit https://t.me/ncpcscamalert for regular updates about scams in Singapore and different scam types.\n\n"
-        "Stay informed to stay safe! 🛡️"
+            "🎓 *Want to learn more about scams?*\n\n"
+            "Visit https://t.me/ncpcscamalert for regular updates about scams in Singapore and different scam types.\n\n"
+            "Stay informed to stay safe! 🛡️"
         )
-        
-        

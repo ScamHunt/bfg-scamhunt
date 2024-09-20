@@ -12,7 +12,6 @@ import logging
 from . import link
 from .messages import ScamHuntMessages
 import json
-import mimetypes
 from .ocr import ocr_image
 import json
 from enum import Enum, auto
@@ -41,6 +40,17 @@ class CallbackData:
     YES = "yes"
     NO = "no"
 
+
+class BotStates(Enum):
+    START = auto()
+    REPORT = auto()
+    RECEIVE_LINK = auto()
+    RECEIVE_PHONE_NUMBER = auto()
+    RECEIVE_SCREENSHOT = auto()
+    RECEIVE_TEXT = auto()
+    SCAMABOUT = auto()
+    MYSTATS = auto()
+    LEADERBOARD = auto()
 
 class ScamType(Enum):
     PHONE_NUMBER = auto()
@@ -82,11 +92,30 @@ async def button_callback_handler(
             )
         case CallbackData.CANCEL:
             await query.edit_message_text(
-                text=messages.cancel+messages.end_message,
+                text=messages.cancel + messages.end_message,
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
-            await query.edit_message_text(text=messages.confirm+messages.end_message, parse_mode="Markdown")
+            logging.info(context.user_data)
+            match context.user_data["state"]:
+                case BotStates.RECEIVE_SCREENSHOT:
+                    await query.edit_message_text(
+                        text=messages.looking_into_scam,
+                        parse_mode="Markdown",
+                    )
+                    image = await context.bot.get_file(context.user_data["photo"].file_id)
+                    ocr_results = await ocr_image(image)
+                    logging.info(json.dumps(ocr_results, indent=2))
+                    context.user_data["state"] = BotStates.START
+                    await query.edit_message_text(
+                        ocr_results["description"],
+                        reply_markup=get_inline_cancel_confirm_keyboard(),
+                    )
+                case _:
+                    await query.edit_message_text(
+                        text=messages.confirm + messages.end_message,
+                        parse_mode="Markdown",
+                    )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -113,10 +142,11 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     context.user_data["link"] = links
     data, exception = await link.extract_data(links)
     if data:
-        await update.message.reply_text(str(data), reply_markup=get_inline_cancel_confirm_keyboard())
+        await update.message.reply_text(
+            str(data), reply_markup=get_inline_cancel_confirm_keyboard()
+        )
     else:
-        await update.message.reply_text(exception+messages.end_message)
-        
+        await update.message.reply_text(exception + messages.end_message)
 
 
 async def receive_phone_number(
@@ -129,30 +159,20 @@ async def receive_phone_number(
     await update.message.reply_text(
         messages.phone_number_sharing.replace("<phone_number>", phone_numbers),
         reply_markup=get_inline_cancel_confirm_keyboard(),
-        parse_mode="Markdown"
+        parse_mode="Markdown",
     )
 
 
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
-    image_info =update.message.photo[-1]
-    height = image_info.height
-    width = image_info.width
-    file= await context.bot.get_file(image_info.file_id)
-    file_mimetype = mimetypes.guess_type(file.file_path)
-    file_bytes  = await file.download_as_bytearray()
-    message = await update.message.reply_text("You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown")
-    ocr_results = await ocr_image(file_bytes, file_mimetype[0])
-    match ocr_results["platform"]:
-        case "Facebook":
-            await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
-        case "Instagram":
-            await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
+    context.user_data["state"] = BotStates.RECEIVE_SCREENSHOT
+    context.user_data["photo"] = update.message.photo[-1]
 
-    logging.info(json.dumps(ocr_results, indent=2))
-    await update.message.reply_text(ocr_results["description"], reply_markup=get_inline_cancel_confirm_keyboard())
-
-
+    message = await update.message.reply_text(
+        messages.screenshot_sharing,
+        parse_mode="Markdown",
+        reply_markup=get_inline_cancel_confirm_keyboard(),
+    )
 
 
 async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -184,14 +204,13 @@ async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /help command."""
     await update.message.reply_text(messages.help)
-    
+
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
     logging.error(f"Update {update} caused error {context.error}")
     if update:
         await update.message.reply_text(messages.error)
-    
 
 
 def get_inline_cancel_confirm_keyboard():
