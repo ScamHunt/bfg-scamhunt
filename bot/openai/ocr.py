@@ -1,15 +1,36 @@
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BaseModel
 from .prompts import OCR_PROMPT
 import os
 import base64
 from PIL import Image
 from dotenv import load_dotenv
 import json
+import logging
 
 
 load_dotenv(override=True)
 
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+
+# class Screenshot(BaseModel):
+#     username: str
+#     group: str
+#     text: str
+#     description: str
+#     links: list[str]
+#     likes: str
+#     comments: str
+#     shares: str
+#     location: str
+#     platform: str
+#     email: str
+#     phone_extension: str
+#     phone_number: str
+#     ad_or_post: str
+#     is_sponsored: str
+#     scam_likelihood: int
+#     platform: str
 
 
 def img_to_base64(img_bytes: bytearray):
@@ -39,7 +60,7 @@ async def ocr_image(image_bytes: bytearray, img_type: str) -> dict:
             response_format={"type": "json_object"},
         )
     except Exception as e:
-        print(e)
+        logging.error(e)
         return {"description": "Error analyzing image, do still want to report?"}
     result = json.loads(response.choices[0].message.content)
     return result

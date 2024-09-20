@@ -13,12 +13,12 @@ from . import link
 from .messages import ScamHuntMessages
 import json
 import mimetypes
-from .ocr import ocr_image
+from .openai.ocr import ocr_image
 
-from .db.supabase import supabase
+from .db.supabase import supabase, upload_to_supabase
 
 from enum import Enum, auto
-
+from .db.report import Report, create_report
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -84,11 +84,13 @@ async def button_callback_handler(
             )
         case CallbackData.CANCEL:
             await query.edit_message_text(
-                text=messages.cancel+messages.end_message,
+                text=messages.cancel + messages.end_message,
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
-            await query.edit_message_text(text=messages.confirm+messages.end_message, parse_mode="Markdown")
+            await query.edit_message_text(
+                text=messages.confirm + messages.end_message, parse_mode="Markdown"
+            )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -115,10 +117,12 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     context.user_data["link"] = links
     data, exception = await link.extract_data(links)
     if data:
-        await update.message.reply_text(str(data), reply_markup=get_inline_cancel_confirm_keyboard())
+        await update.message.reply_text(
+            str(data), reply_markup=get_inline_cancel_confirm_keyboard()
+        )
     else:
-        await update.message.reply_text(exception+messages.end_message)
-        
+        await update.message.reply_text(exception + messages.end_message)
+
 
 async def receive_phone_number(
     update: Update, context: ContextTypes.DEFAULT_TYPE
@@ -130,7 +134,7 @@ async def receive_phone_number(
     await update.message.reply_text(
         messages.phone_number_sharing.replace("<phone_number>", phone_numbers),
         reply_markup=get_inline_cancel_confirm_keyboard(),
-        parse_mode="Markdown"
+        parse_mode="Markdown",
     )
 
 
@@ -138,24 +142,34 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """Handle when user sends a screenshot for a scam."""
     print(context)
     image_info = update.message.photo[-1]
-    print(image_info)
     height = image_info.height
     width = image_info.width
     file = await context.bot.get_file(image_info.file_id)
     file_mimetype = mimetypes.guess_type(file.file_path)
-    file_bytes  = await file.download_as_bytearray()
-    message = await update.message.reply_text("You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown")
+    file_bytes = await file.download_as_bytearray()
+    message = await update.message.reply_text(
+        "You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown"
+    )
     ocr_results = await ocr_image(file_bytes, file_mimetype[0])
     match ocr_results["platform"]:
         case "Facebook":
             await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
         case "Instagram":
             await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
+    url = upload_to_supabase(
+        file_bytes, file_mimetype[0], update.message.from_user.username
+    )
+    report = Report(
+        poster_username=ocr_results["username"],
+        platform=ocr_results["platform"],
+        post_description=ocr_results["text"],
+        telegram_created_by=update.message.from_user.username,
+    )
+    create_report(report)
 
-    logging.info(json.dumps(ocr_results, indent=2))
-    await update.message.reply_text(ocr_results["description"], reply_markup=get_inline_cancel_confirm_keyboard())
-
-
+    # await update.message.reply_text(
+    #     ocr_results["description"], reply_markup=get_inline_cancel_confirm_keyboard()
+    # )
 
 
 async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -194,7 +208,6 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     logging.error(f"Update {update} caused error {context.error}")
     if update:
         await update.message.reply_text(messages.error)
-    
 
 
 def get_inline_cancel_confirm_keyboard():
