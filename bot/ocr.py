@@ -36,7 +36,7 @@ async def ocr_image(file) -> dict:
     img_b64_str = img_to_base64(compressed_image)
     try:
         response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "user",
