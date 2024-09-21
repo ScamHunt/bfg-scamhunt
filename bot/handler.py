@@ -15,7 +15,8 @@ import json
 from .ocr import ocr_image
 import json
 from enum import Enum, auto
-
+from .onboarding.onboarding import is_onboarding, onboarding, start
+from .onboarding.onboarding_messages import OnboardingStates
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -52,6 +53,7 @@ class BotStates(Enum):
     MYSTATS = auto()
     LEADERBOARD = auto()
 
+
 class ScamType(Enum):
     PHONE_NUMBER = auto()
     SCREENSHOT = auto()
@@ -63,6 +65,9 @@ async def button_callback_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Handle the callback query from the inline keyboard."""
+    if is_onboarding(update.callback_query.data):
+        await onboarding(update, context)
+        return
     query = update.callback_query
     await query.answer()
     scam_type = context.user_data.get("scam_type")
@@ -103,7 +108,9 @@ async def button_callback_handler(
                         text=messages.looking_into_scam,
                         parse_mode="Markdown",
                     )
-                    image = await context.bot.get_file(context.user_data["photo"].file_id)
+                    image = await context.bot.get_file(
+                        context.user_data["photo"].file_id
+                    )
                     ocr_results = await ocr_image(image)
                     logging.info(json.dumps(ocr_results, indent=2))
                     context.user_data["state"] = BotStates.START
@@ -116,16 +123,6 @@ async def button_callback_handler(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
                     )
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Handle /start command."""
-    inline_keyboard = [
-        [InlineKeyboardButton("Report a Scam", callback_data=CallbackData.REPORT_SCAM)]
-    ]
-    await update.message.reply_text(
-        messages.start_message, reply_markup=InlineKeyboardMarkup(inline_keyboard)
-    )
 
 
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
