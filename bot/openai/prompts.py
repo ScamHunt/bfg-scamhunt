@@ -60,30 +60,7 @@ Follow these steps to extract the information:
 
 Before providing your final output, use a <scratchpad> to think through your analysis and reasoning for the scam likelihood rating and double-check your work to ensure there are no mistakes in extracting all of the required information.
 
-Provide your final output in the following JSON format:
-
-<output>
-{
-"username": "",
-"group": "",
-"text": "",
-"description": "",
-"links": ["link1"],
-"likes": "",
-"comments": "",
-"shares": "",
-"location": "",
-"platform": "",
-"email": "",
-"phone_extension": "",
-"phone_number": "",
-"ad_or_post": "",
-"is_sponsored": "",
-"scam_likelihood": 0
-}
-</output>
-
-Ensure that all fields are filled out based on the information you've extracted from the image data. If any information is not available or cannot be determined, use "null" for that field.
+Ensure that all fields are filled out based on the information you've extracted from the image data. If any information is not available or cannot be determined, use "null" or None for that field.
 
 
 

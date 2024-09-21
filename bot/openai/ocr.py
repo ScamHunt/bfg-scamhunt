@@ -1,4 +1,5 @@
-from openai import AsyncOpenAI, BaseModel
+from openai import OpenAI
+from pydantic import BaseModel
 from .prompts import OCR_PROMPT
 import os
 import base64
@@ -12,28 +13,30 @@ import mimetypes
 
 load_dotenv(override=True)
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 logger = logging.getLogger(__name__)
 
 
-# class Screenshot(BaseModel):
-#     username: str
-#     group: str
-#     text: str
-#     description: str
-#     links: list[str]
-#     likes: str
-#     comments: str
-#     shares: str
-#     location: str
-#     platform: str
-#     email: str
-#     phone_extension: str
-#     phone_number: str
-#     ad_or_post: str
-#     is_sponsored: str
-#     scam_likelihood: int
-#     platform: str
+class Screenshot(BaseModel):
+    from_user: str
+    to_user: str | None
+    caption: str
+    description: str
+    links: list[str]
+    likes: str
+    comments: str
+    shares: str
+    location: str
+    platform: str
+    email: str
+    phone_extension: str
+    phone_number: str
+    is_advertisement: bool
+    is_sponsored: bool
+    is_social_media_post: bool
+    is_video: bool
+    scam_likelihood: int
+    platform: str
 
 
 def img_to_base64(img_bytes: bytearray):
@@ -45,9 +48,7 @@ def compress_image(img_bytes: bytearray, img_type: str) -> bytes:
     img_type = img_type.split("/")[-1]
     img = Image.open(io.BytesIO(img_bytes))
     img_io = io.BytesIO()
-    img.save("before.png", format=img_type)
     img.save(img_io, format=img_type, optimize=True, quality=50)
-    img.save("after.png", format=img_type, optimize=True, quality=50)
     img_io.seek(0)
     return img_io.getvalue()
 
@@ -56,14 +57,14 @@ def img_to_base64(img_bytes: bytes) -> str:
     return base64.b64encode(img_bytes).decode("utf-8")
 
 
-async def ocr_image(file) -> dict:
+async def ocr_image(file) -> (Screenshot, Exception):
     file_mimetype = mimetypes.guess_type(file.file_path)
     image_bytes = await file.download_as_bytearray()
     img_type = file_mimetype[0]
     compressed_image = compress_image(image_bytes, img_type)
     img_b64_str = img_to_base64(compressed_image)
     try:
-        response = await client.chat.completions.create(
+        response = client.beta.chat.completions.parse(
             model="gpt-4o-mini",
             messages=[
                 {
@@ -79,11 +80,10 @@ async def ocr_image(file) -> dict:
                     ],
                 }
             ],
-            response_format={"type": "json_object"},
+            response_format=Screenshot,
         )
-        return json.loads(response.choices[0].message.content)
+        out = response.choices[0].message.parsed
+        return (out, None)
     except Exception as e:
         logger.error(f"Error analyzing image: {e}")
-        return {"description": "Error analyzing image, do still want to report?"}
-    result = json.loads(response.choices[0].message.content)
-    return result
+        return (None, e)

@@ -13,7 +13,7 @@ from . import link
 from .messages import ScamHuntMessages
 import json
 import mimetypes
-from .openai.ocr import ocr_image
+from .openai.ocr import ocr_image, Screenshot
 
 from .db.supabase import supabase, upload_to_supabase
 
@@ -115,11 +115,15 @@ async def button_callback_handler(
                     image = await context.bot.get_file(
                         context.user_data["photo"].file_id
                     )
-                    ocr_results = await ocr_image(image)
-                    logging.info(json.dumps(ocr_results, indent=2))
+                    result, exception = await ocr_image(image)
+                    if exception:
+                        await query.edit_message_text(
+                            text=exception + messages.end_message,
+                            parse_mode="Markdown",
+                        )
                     context.user_data["state"] = BotStates.START
                     await query.edit_message_text(
-                        ocr_results["description"],
+                        result.description,
                         reply_markup=get_inline_cancel_confirm_keyboard(),
                     )
                 case _:
@@ -168,41 +172,37 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """Handle when user sends a screenshot for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_SCREENSHOT
     context.user_data["photo"] = update.message.photo[-1]
-
     message = await update.message.reply_text(
         messages.screenshot_sharing,
         parse_mode="Markdown",
         reply_markup=get_inline_cancel_confirm_keyboard(),
     )
-    image_info = update.message.photo[-1]
-    height = image_info.height
-    width = image_info.width
-    file = await context.bot.get_file(image_info.file_id)
-    file_mimetype = mimetypes.guess_type(file.file_path)
-    file_bytes = await file.download_as_bytearray()
-    message = await update.message.reply_text(
-        "You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown"
-    )
-    ocr_results = await ocr_image(file_bytes, file_mimetype[0])
-    match ocr_results["platform"]:
-        case "Facebook":
-            await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
-        case "Instagram":
-            await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
-    url = upload_to_supabase(
-        file_bytes, file_mimetype[0], update.message.from_user.username
-    )
-    report = Report(
-        poster_username=ocr_results["username"],
-        platform=ocr_results["platform"],
-        post_description=ocr_results["text"],
-        telegram_created_by=update.message.from_user.username,
-    )
-    create_report(report)
 
-    # await update.message.reply_text(
-    #     ocr_results["description"], reply_markup=get_inline_cancel_confirm_keyboard()
+    # image_info = update.message.photo[-1]
+    # height = image_info.height
+    # width = image_info.width
+    # file = await context.bot.get_file(image_info.file_id)
+    # file_mimetype = mimetypes.guess_type(file.file_path)
+    # file_bytes = await file.download_as_bytearray()
+    # message = await update.message.reply_text(
+    #     "You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown"
     # )
+    # ocr_results = await ocr_image(file_bytes, file_mimetype[0])
+    # match ocr_results["platform"]:
+    #     case "Facebook":
+    #         await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
+    #     case "Instagram":
+    #         await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
+    # url = upload_to_supabase(
+    #     file_bytes, file_mimetype[0], update.message.from_user.username
+    # )
+    # report = Report(
+    #     poster_username=ocr_results["username"],
+    #     platform=ocr_results["platform"],
+    #     post_description=ocr_results["text"],
+    #     telegram_created_by=update.message.from_user.username,
+    # )
+    # create_report(report)
 
 
 async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
