@@ -115,8 +115,9 @@ async def button_callback_handler(
                     logging.info(json.dumps(ocr_results, indent=2))
                     context.user_data["state"] = BotStates.START
                     await query.edit_message_text(
-                        ocr_results["description"],
+                        f"Seems like you shared a *{ocr_results['platform']}* scam. Do you want to report it?",
                         reply_markup=get_inline_cancel_confirm_keyboard(),
+                        parse_mode="Markdown",
                     )
                 case _:
                     await query.edit_message_text(
