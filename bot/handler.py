@@ -118,15 +118,24 @@ async def button_callback_handler(
                     result, exception = await ocr_image(image)
                     if exception:
                         await query.edit_message_text(
-                            text=exception + messages.end_message,
+                            text=messages.error + messages.end_message,
                             parse_mode="Markdown",
                         )
-                    context.user_data["state"] = BotStates.START
-                    await query.edit_message_text(
-                        result.description,
-                        reply_markup=get_inline_cancel_confirm_keyboard(),
-                        parse_mode="Markdown",
-                    )
+                    else:
+                        context.user_data["state"] = BotStates.START                        
+                        if result.is_screenshot:
+                            text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
+                            await query.edit_message_text(
+                                text=text,
+                                reply_markup=get_inline_cancel_confirm_keyboard(),
+                                parse_mode="Markdown",
+                            )
+                        else:
+                            text = "Oops! 🙈 It looks like what you shared isn't a screenshot Please try again with a real screenshot. 📸"
+                            await query.edit_message_text(
+                                text=text,
+                                parse_mode="Markdown",
+                            )
                 case _:
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
