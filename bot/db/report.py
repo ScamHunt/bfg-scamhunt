@@ -18,10 +18,16 @@ class Report:
     screenshot_url: Optional[str] = None
 
 
-def create_report(report: Report):
+def create_report(report: Report) -> (Report, Exception):
     new = report.__dict__
     del new["id"]
-    return supabase.table("report").insert(new).execute()
+    try:
+        data = supabase.table("report").insert(new).execute()
+        return (data.data, None)
+    except APIError as e:
+        logging.error(f"Error creating report: {e}")
+        (None, e)
+
 
 
 def get_report(report_id: int) -> Report:
