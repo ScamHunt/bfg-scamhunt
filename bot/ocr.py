@@ -19,9 +19,7 @@ def compress_image(img_bytes: bytearray, img_type: str) -> bytes:
     img_type = img_type.split("/")[-1]
     img = Image.open(io.BytesIO(img_bytes))
     img_io = io.BytesIO()
-    img.save("before.png", format=img_type)
     img.save(img_io, format=img_type, optimize=True, quality=50)
-    img.save("after.png", format=img_type, optimize=True, quality=50)
     img_io.seek(0)
     return img_io.getvalue()
 
