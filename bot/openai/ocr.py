@@ -7,6 +7,7 @@ from PIL import Image
 from dotenv import load_dotenv
 import json
 import logging
+from typing import Optional
 
 import io
 import mimetypes
@@ -23,28 +24,28 @@ class ScamType(BaseModel):
 
 
 class Screenshot(BaseModel):
-    from_user: str
-    to_user: str | None
-    caption: str
+    from_user: Optional[str]
+    to_user: Optional[str]
+    caption: Optional[str]
     description: str
-    links: list[str]
-    likes: str
-    comments: str
-    shares: str
-    location: str
+    location: Optional[str]
     platform: str
-    email: str
-    phone_extension: str
-    phone_number: str
     is_advertisement: bool
     is_sponsored: bool
     is_social_media_post: bool
     is_video: bool
-    scam_likelihood: int
-    platform: str
-    reasoning: str
-    scam_type: list[ScamType]
+    is_photo: bool
     is_screenshot: bool
+    scam_likelihood: int
+    platform: Optional[str]
+    reasoning: str
+    scam_types: list[ScamType]
+    links: list[str]
+    phone_numbers: list[str]
+    emails: list[str]
+    likes: int
+    comments: int
+    shares: int
 
 
 def img_to_base64(img_bytes: bytearray):

@@ -16,8 +16,7 @@ Your task is to extract the following information:
 9. Location
 10. Social media platform
 11. Email of the social media account
-12. Phone extension
-13. Phone number (excluding extension)
+13. Phone number
 14. Whether it's an advertisement or user-generated post
 15. Whether it's sponsored or not
 16. Likelihood of being a scam
@@ -79,7 +78,4 @@ Follow these steps to extract the information:
 Before providing your final output, use a <scratchpad> to think through your analysis and reasoning for the scam likelihood rating and double-check your work to ensure there are no mistakes in extracting all of the required information.
 
 Ensure that all fields are filled out based on the information you've extracted from the image data. If any information is not available or cannot be determined, use "null" or None for that field.
-
-
-
 """
