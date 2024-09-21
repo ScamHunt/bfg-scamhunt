@@ -16,7 +16,10 @@ import logging
 
 load_dotenv(override=True)
 
-bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+if os.getenv("ENV") == "local":
+    bot_token = os.getenv("TELEGRAM_STG_BOT_TOKEN")
+else:
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # set higher logging level for httpx to avoid all GET and POST requests being logged
 logging.getLogger("httpx").setLevel(logging.WARNING)
