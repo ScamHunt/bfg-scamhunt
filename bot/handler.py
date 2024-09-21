@@ -178,32 +178,6 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         reply_markup=get_inline_cancel_confirm_keyboard(),
     )
 
-    # image_info = update.message.photo[-1]
-    # height = image_info.height
-    # width = image_info.width
-    # file = await context.bot.get_file(image_info.file_id)
-    # file_mimetype = mimetypes.guess_type(file.file_path)
-    # file_bytes = await file.download_as_bytearray()
-    # message = await update.message.reply_text(
-    #     "You shared a *screenshot* 📸, I'm taking a look 🔍...", parse_mode="Markdown"
-    # )
-    # ocr_results = await ocr_image(file_bytes, file_mimetype[0])
-    # match ocr_results["platform"]:
-    #     case "Facebook":
-    #         await message.edit_text(messages.facebook_scam, parse_mode="Markdown")
-    #     case "Instagram":
-    #         await message.edit_text(messages.instagram_scam, parse_mode="Markdown")
-    # url = upload_to_supabase(
-    #     file_bytes, file_mimetype[0], update.message.from_user.username
-    # )
-    # report = Report(
-    #     poster_username=ocr_results["username"],
-    #     platform=ocr_results["platform"],
-    #     post_description=ocr_results["text"],
-    #     telegram_created_by=update.message.from_user.username,
-    # )
-    # create_report(report)
-
 
 async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle text messages."""
