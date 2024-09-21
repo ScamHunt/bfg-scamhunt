@@ -17,6 +17,11 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 logger = logging.getLogger(__name__)
 
 
+class ScamType(BaseModel):
+    scam_type: str
+    score: int
+
+
 class Screenshot(BaseModel):
     from_user: str
     to_user: str | None
@@ -37,6 +42,9 @@ class Screenshot(BaseModel):
     is_video: bool
     scam_likelihood: int
     platform: str
+    reasoning: str
+    scam_type: list[ScamType]
+    is_screenshot: bool
 
 
 def img_to_base64(img_bytes: bytearray):
@@ -65,7 +73,7 @@ async def ocr_image(file) -> (Screenshot, Exception):
     img_b64_str = img_to_base64(compressed_image)
     try:
         response = client.beta.chat.completions.parse(
-            model="gpt-4o-mini",
+            model="gpt-4o-2024-08-06", # earlier models dont support structured outputs
             messages=[
                 {
                     "role": "user",
