@@ -27,12 +27,12 @@ class ScamHuntMessages:
         )
 
         self.screenshot_sharing = (
-            "🖼️ Thanks for sharing a *scam screenshot!*\n\n"
-            "Could you confirm if this is the screenshot of the scam you're reporting?"
+            "🖼️ Thanks for sharing a *suspicious screenshot!*\n\n"
+            "Could you confirm if this is the screenshot of the suspicious post you're reporting?"
         )
 
         self.looking_into_scam = (
-            "🔍 I'm looking into this scam. Please wait a moment... \n\n"
+            "🔍 I'm looking into this. Please wait a moment... \n\n"
         )
 
         self.text_sharing = (
