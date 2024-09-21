@@ -125,6 +125,7 @@ async def button_callback_handler(
                     await query.edit_message_text(
                         result.description,
                         reply_markup=get_inline_cancel_confirm_keyboard(),
+                        parse_mode="Markdown",
                     )
                 case _:
                     await query.edit_message_text(
