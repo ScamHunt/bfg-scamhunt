@@ -24,9 +24,3 @@ async def onboarding(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def is_onboarding(state: str):
     return state in OnboardingStates.values()
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    state = "WELCOME"
-    message = onboarding_messages.get_message(state=state)
-    await update.message.reply_text(message.text, reply_markup=message.keyboard)
