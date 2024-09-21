@@ -12,9 +12,13 @@ import logging
 from . import link
 from .messages import ScamHuntMessages
 import json
-from .ocr import ocr_image
-import json
+import mimetypes
+from .openai.ocr import ocr_image, Screenshot
+
+from .db.supabase import supabase, upload_to_supabase
+
 from enum import Enum, auto
+from .db.report import Report, create_report
 from .onboarding.onboarding import is_onboarding, onboarding, start
 from .onboarding.onboarding_messages import OnboardingStates
 
@@ -111,11 +115,15 @@ async def button_callback_handler(
                     image = await context.bot.get_file(
                         context.user_data["photo"].file_id
                     )
-                    ocr_results = await ocr_image(image)
-                    logging.info(json.dumps(ocr_results, indent=2))
+                    result, exception = await ocr_image(image)
+                    if exception:
+                        await query.edit_message_text(
+                            text=exception + messages.end_message,
+                            parse_mode="Markdown",
+                        )
                     context.user_data["state"] = BotStates.START
                     await query.edit_message_text(
-                        f"Seems like you shared an *{ocr_results['platform']}* suspicious post. Do you want to report it?",
+                        result.description,
                         reply_markup=get_inline_cancel_confirm_keyboard(),
                         parse_mode="Markdown",
                     )
@@ -165,7 +173,6 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """Handle when user sends a screenshot for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_SCREENSHOT
     context.user_data["photo"] = update.message.photo[-1]
-
     message = await update.message.reply_text(
         messages.screenshot_sharing,
         parse_mode="Markdown",
