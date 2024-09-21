@@ -44,6 +44,17 @@ class CallbackData:
     NO = "no"
 
 
+class BotStates(Enum):
+    START = auto()
+    REPORT = auto()
+    RECEIVE_LINK = auto()
+    RECEIVE_PHONE_NUMBER = auto()
+    RECEIVE_SCREENSHOT = auto()
+    RECEIVE_TEXT = auto()
+    SCAMABOUT = auto()
+    MYSTATS = auto()
+    LEADERBOARD = auto()
+
 class ScamType(Enum):
     PHONE_NUMBER = auto()
     SCREENSHOT = auto()
@@ -88,9 +99,26 @@ async def button_callback_handler(
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
-            await query.edit_message_text(
-                text=messages.confirm + messages.end_message, parse_mode="Markdown"
-            )
+            logging.info(context.user_data)
+            match context.user_data["state"]:
+                case BotStates.RECEIVE_SCREENSHOT:
+                    await query.edit_message_text(
+                        text=messages.looking_into_scam,
+                        parse_mode="Markdown",
+                    )
+                    image = await context.bot.get_file(context.user_data["photo"].file_id)
+                    ocr_results = await ocr_image(image)
+                    logging.info(json.dumps(ocr_results, indent=2))
+                    context.user_data["state"] = BotStates.START
+                    await query.edit_message_text(
+                        ocr_results["description"],
+                        reply_markup=get_inline_cancel_confirm_keyboard(),
+                    )
+                case _:
+                    await query.edit_message_text(
+                        text=messages.confirm + messages.end_message,
+                        parse_mode="Markdown",
+                    )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -140,7 +168,14 @@ async def receive_phone_number(
 
 async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
-    print(context)
+    context.user_data["state"] = BotStates.RECEIVE_SCREENSHOT
+    context.user_data["photo"] = update.message.photo[-1]
+
+    message = await update.message.reply_text(
+        messages.screenshot_sharing,
+        parse_mode="Markdown",
+        reply_markup=get_inline_cancel_confirm_keyboard(),
+    )
     image_info = update.message.photo[-1]
     height = image_info.height
     width = image_info.width
