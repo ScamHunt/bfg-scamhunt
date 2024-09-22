@@ -78,7 +78,7 @@ def create_report(report: Report) -> (Report, Exception):
     del new["id"]
     try:
         data = supabase.table("report").insert(new).execute()
-        return (data.data, None)
+        return (data.data[0], None)
     except APIError as e:
         logging.error(f"Error creating report: {e}")
         return (None, e)
