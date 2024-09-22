@@ -1,7 +1,9 @@
 from .supabase import supabase
+from postgrest import APIError
 from dataclasses import dataclass
 import json
 import logging
+from datetime import datetime
 from typing import Optional
 from ..openai.ocr import ScamType, Screenshot
 
@@ -17,14 +19,17 @@ class Report:
         to_user: Optional[str],
         caption: Optional[str],
         location: Optional[str],
-        ai_description: str,
+        report_url: Optional[str],
+        description: str,
         reasoning: str,
         scam_likelihood: int,
         is_advertisement: bool,
         is_sponsored: bool,
         is_photo: bool,
         is_video: bool,
+        is_social_media_post: bool,
         created_by_tg_id: int,
+        created_at: Optional[datetime],
         scam_types: list[ScamType],
         links: list[str] = [],
         phone_numbers: list[str] = [],
@@ -39,14 +44,17 @@ class Report:
         self.to_user = to_user
         self.caption = caption
         self.location = location
-        self.ai_description = ai_description
+        self.report_url = report_url
+        self.description = description
         self.reasoning = reasoning
         self.scam_likelihood = scam_likelihood
         self.is_advertisement = is_advertisement
         self.is_sponsored = is_sponsored
         self.is_photo = is_photo
         self.is_video = is_video
+        self.is_social_media_post = is_social_media_post
         self.created_by_tg_id = created_by_tg_id
+        self.created_at = created_at
         self.scam_types = scam_types
         self.links = links
         self.phone_numbers = phone_numbers
@@ -55,34 +63,15 @@ class Report:
         self.comments = comments
         self.shares = shares
 
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(**data)
 
-    def __init__(
-        self, screenshot: Screenshot, created_by_tg_id: int
-    ):
+    @classmethod
+    def from_screenshot(self, screenshot: Screenshot, created_by_tg_id: int):
         self.created_by_tg_id = created_by_tg_id
-
-        self.platform = screenshot.platform
-        self.from_user = screenshot.from_user
-        self.to_user = screenshot.to_user
-        self.caption = screenshot.caption
-        self.location = screenshot.location
-        self.ai_description = screenshot.description
-        self.reasoning = screenshot.reasoning
-        self.scam_likelihood = screenshot.scam_likelihood
-        self.is_advertisement = screenshot.is_advertisement
-        self.is_sponsored = screenshot.is_sponsored
-        self.is_photo = screenshot.is_photo
-        self.is_video = screenshot.is_video
-        self.scam_types = screenshot.scam_types
-        self.links = screenshot.links
-        self.phone_numbers = screenshot.phone_numbers
-        self.emails = screenshot.emails
-        self.likes = screenshot.likes
-        self.comments = screenshot.comments
-        self.shares = screenshot.shares
+        for key, value in screenshot.dict().items():
+            setattr(self, key, value)
 
 
 def create_report(report: Report) -> (Report, Exception):
@@ -96,5 +85,39 @@ def create_report(report: Report) -> (Report, Exception):
         return (None, e)
 
 
-def get_report(report_id: int) -> Report:
-    return supabase.table("report").select("*").eq("id", report_id).execute()
+def get_report(report_id: int) -> (Report, Exception):
+    try:
+        data = (
+            supabase.table("report")
+            .select("*")
+            .eq("id", report_id)
+            .limit(1)
+            .single()
+            .execute()
+        )
+        return (Report.from_dict(data.data), None)
+    except APIError as e:
+        logging.error(f"Error getting report: {e}")
+        return (None, e)
+    except TypeError as e:
+        logging.error(f"Error getting report: {e}")
+        return (None, e)
+
+
+def get_reports_by_user(user_id: int) -> (list[Report], Exception):
+    try:
+        data = (
+            supabase.table("report")
+            .select("*")
+            .eq("created_by_tg_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        reports = [Report.from_dict(report) for report in data.data]
+        return (reports, None)
+    except APIError as e:
+        logging.error(f"Error getting reports by user: {e}")
+        return (None, e)
+    except TypeError as e:
+        logging.error(f"Error getting reports by user: {e}")
+        return (None, e)
