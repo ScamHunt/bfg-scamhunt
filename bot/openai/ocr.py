@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import json
 import logging
 from typing import Optional
+from enum import Enum
 
 import io
 import mimetypes
@@ -22,6 +23,11 @@ class ScamType(BaseModel):
     scam_type: str
     score: int
 
+class Platform(Enum):
+    FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
+    UNKNOWN = "unknown"
+
 
 class Screenshot(BaseModel):
     from_user: Optional[str]
@@ -29,7 +35,7 @@ class Screenshot(BaseModel):
     caption: Optional[str]
     description: str
     location: Optional[str]
-    platform: str
+    platform: Platform
     is_advertisement: bool
     is_sponsored: bool
     is_social_media_post: bool

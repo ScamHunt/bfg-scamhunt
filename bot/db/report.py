@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime
 from typing import Optional
-from ..openai.ocr import ScamType, Screenshot
+from ..openai.ocr import ScamType, Screenshot, Platform
 
 
 class Report:
@@ -14,7 +14,7 @@ class Report:
     def __init__(
         self,
         id: Optional[int],
-        platform: Optional[str],
+        platform: Platform,
         from_user: Optional[str],
         to_user: Optional[str],
         caption: Optional[str],
