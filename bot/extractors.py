@@ -1,13 +1,32 @@
 from telegram import Update
-from telegram.ext import CommandHandler, ContextTypes
-import re
+
+
+from telegram import Update
 from urllib.parse import urlparse
 import logging
-from dataclasses import dataclass
 from enum import Enum
 
-from . import instagram
-from . import facebook
+from bot.link import instagram
+from bot.link import facebook
+
+
+def extract_phone_numbers(update: Update) -> tuple[list[str], list[str]]:
+    entities = update.message.entities
+    return [
+        update.message.text[entity.offset : entity.offset + entity.length]
+        for entity in entities
+        if entity.type == "phone_number"
+    ]
+
+
+def extract_urls(update: Update) -> tuple[list[str], list[str]]:
+    entities = update.message.entities
+    urls = [
+        update.message.text[entity.offset : entity.offset + entity.length]
+        for entity in entities
+        if entity.type == "url"
+    ]
+    return urls
 
 
 class SocialMedia(Enum):

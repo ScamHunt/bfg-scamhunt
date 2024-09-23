@@ -1,4 +1,4 @@
-OCR_PROMPT  = """
+OCR_PROMPT = """
 You are an expert in optical character recognition (OCR) and social media analysis. Your task is to analyze a potential scam post on social media and extract specific information from it.
 
 First, examine the image data provided:
@@ -16,12 +16,14 @@ Your task is to extract the following information:
 9. Location
 10. Social media platform
 11. Email of the social media account
-12. Phone extension
-13. Phone number (excluding extension)
+13. Phone number
 14. Whether it's an advertisement or user-generated post
 15. Whether it's sponsored or not
 16. Likelihood of being a scam
-17. social media post or not social media post
+17. Reasoning for scam likelihood 
+18. Scam type
+19. is screenshot
+
 
 Follow these steps to extract the information:
 
@@ -51,48 +53,32 @@ Follow these steps to extract the information:
 
 15. Sponsored or non-sponsored: Analyze if the post is sponsored. Output "true" if sponsored, "false" if not.
 
-16. Scam likelihood: Analyze the content, language, and promises made in the post. Rate the likelihood of it being a scam on a scale from 1 to 5, where 1 is very unlikely and 5 is very likely. Consider factors such as:
+16. Scam likelihood: Analyze the content, language, and promises made in the post. Rate the likelihood of it being a scam on a scale from 0 to 100, where 0 is very unlikely and 100 is very likely. Consider factors such as:
    - Unrealistic promises
    - Urgency or pressure tactics
    - Requests for personal information
    - Poor grammar or spelling
    - Use of common scam phrases
    - Images or post with evidence of manipulation with photo editing software
+   - suspicious links
+
+17. Reasoning for scam likelihood rating: Provide a detailed explanation for the scam likelihood rating you have assigned.
+
+18. Provide scam type as a list from most likely to least likely with a score from 0 to 100, the total score should be 100. Only include scam types with a score above 85. the list of scam types are:
+- e-commerce
+- job
+- investment
+- phishing
+- loan
+- love
+- other
+
+19. is screenshot: Determine if the image is a screenshot. Use "true" if it is a screenshot, "false" if it is not.
 
 17. Social media post or not social media post: Analyze if the post is a social media post. Output "true" if social media post, "false" if not.
 
 
 Before providing your final output, use a <scratchpad> to think through your analysis and reasoning for the scam likelihood rating and double-check your work to ensure there are no mistakes in extracting all of the required information.
 
-<scratchpad>
-</scratchpad>
-
-Provide your final output in the following JSON format:
-
-<output>
-{
-"username": "",
-"group": "",
-"text": "",
-"description": "",
-"links": ["link1"],
-"likes": "",
-"comments": "",
-"shares": "",
-"location": "",
-"platform": "",
-"email": "",
-"phone_extension": "",
-"phone_number": "",
-"ad_or_post": "",
-"is_sponsored": "",
-"scam_likelihood": 0,
-"is_social_media_post": false
-}
-</output>
-
-Ensure that all fields are filled out based on the information you've extracted from the image data. If any information is not available or cannot be determined, use "null" for that field.
-
-
-
+Ensure that all fields are filled out based on the information you've extracted from the image data. If any information is not available or cannot be determined, use "null" or None for that field.
 """
