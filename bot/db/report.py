@@ -1,11 +1,10 @@
 from .supabase import supabase
 from postgrest import APIError
-from dataclasses import dataclass
-import json
 import logging
 from datetime import datetime
 from typing import Optional
 from ..openai.ocr import ScamType, Screenshot
+
 
 class Report:
     """Structure of a scam report."""
@@ -36,6 +35,7 @@ class Report:
         location: Optional[str] = None,
         report_url: Optional[str] = None,
         created_at: Optional[datetime] = None,
+        
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
