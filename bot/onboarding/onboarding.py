@@ -16,6 +16,7 @@ onboarding_messages = OnboardingMessages()
 async def onboarding(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     state = get_state(query.data)
+    logging.info(f"Onboarding state: {state}")
     message = onboarding_messages.get_message(state=state)
     if not message.keyboard:
         return await query.edit_message_text(message.text)

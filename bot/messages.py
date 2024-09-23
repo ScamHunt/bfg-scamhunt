@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class ScamHuntMessages:
     start_message: str = (
@@ -17,7 +18,9 @@ class ScamHuntMessages:
         "You can share both!"
     )
 
-    link_sharing: str = "🚀 Thanks for sharing this <link> scam! I'm checking out that link right now... 🔍\n\n"
+    link_sharing: str = (
+        "🚀 Thanks for sharing this <link> scam! I'm checking out that link right now... 🔍\n\n"
+    )
 
     phone_number_sharing: str = (
         "📞 *Thanks for sharing this phone number(s): <phone_number> !*🔍\n\n"
@@ -30,18 +33,17 @@ class ScamHuntMessages:
         "Could you confirm if this is the screenshot of the suspicious post you're reporting?"
     )
 
-    looking_into_scam: str = (
-        "🔍 I'm looking into this. Please wait a moment... \n\n"
-    )
+    looking_into_scam: str = "🔍 I'm looking into this. Please wait a moment... \n\n"
 
     help: str = (
-        "Singaporeans are losing $1 Million a week to social media scammers. Scamhunt is trying stop them. \n\n"
-        "🚨 /hunt or /report to send us suspicious social media links or screenshots \n"
-        "Send us a suspicious link directly or /hunt to start sharing?\n\n"
+        "Singaporeans are losing $1 Million a week to social media scammers. Scamhunt is trying to stop them. \n\n"
+        "🚨 Use /hunt or /report to send us suspicious social media links or screenshots.\n\n"
         "See you in the hunt!"
     )
 
-    error: str = "🚫 *Error!* Please try again. If the problem persists, contact @scamhuntbot"
+    error: str = (
+        "🚫 *Error!* Please try again. If the problem persists, contact @scamhuntbot"
+    )
 
     scam_type: str = (
         "🙏 *Thank you for sharing a <platform> screenshot\n\n"
@@ -49,13 +51,13 @@ class ScamHuntMessages:
     )
 
     cancel: str = "🚫 *Cancelled!* If you need help, use /help or /start"
-    
-    confirm: str = (
-        "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
+
+    confirm: str = "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
+
+    end_message: str = (
+        "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"
     )
-    
-    end_message: str = "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"
-    
+
     learn: str = (
         "🎓 *Want to learn more about scams?*\n\n"
         "Visit https://t.me/ncpcscamalert for regular updates about scams in Singapore and different scam types.\n\n"

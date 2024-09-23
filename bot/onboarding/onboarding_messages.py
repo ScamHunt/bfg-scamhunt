@@ -1,17 +1,19 @@
-from enum import Enum, auto
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from dataclasses import dataclass
+from bot.handler.callbacks import CallbackData
+
 
 OnboardingStates = {
-    "WELCOME": "welcome",
-    "STEP1": "onboarding_step1",
-    "STEP2": "onboarding_step2",
-    "STEP3_YES": "onboarding_step3_yes",
-    "STEP3_NO": "onboarding_step3_no",
-    "STEP4": "onboarding_step4",
-    "STEP5": "onboarding_step5",
-    "STEP6": "onboarding_step6",
+    "INTRO": "onboarding_intro",
+    "REPORTED_BEFORE_YES": "onboarding_reported_before_yes",
+    "REPORTED_BEFORE_NO": "onboarding_reported_before_no",
+    "WHAT_HAPPENS_NEXT": "onboarding_what_happens_next",
+    "REPORTING_ISSUES": "onboarding_reporting_issues",
+    "SCAMHUNT_SOLUTION": "onboarding_scamhunt_solution",
+    "HOW_TO_HELP": "onboarding_how_to_help",
     "END": "onboarding_end",
+    "EXAMPLE_START": "example_start",
+    "EXAMPLE_SHARE": "example_share",
+    "EXAMPLE_WAITING": "example_waiting",
 }
 
 
@@ -31,85 +33,48 @@ class OnboardingMessage:
 class OnboardingMessages:
     def __init__(self):
         self.messages = {
-            OnboardingStates["WELCOME"]: OnboardingMessage(
-                text=(
-                    "Welcome to ScamHunt! 🕵️‍♀️\n\n"
-                    "We're on a mission to make Singapore safer from online scams.\n\n"
-                    "Ready to join the hunt?"
-                ),
+            OnboardingStates["INTRO"]: OnboardingMessage(
+                text="Have you ever reported suspicious posts or links on Facebook or Instagram before?",
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "Let's go!", callback_data=OnboardingStates["STEP1"]
-                            )
-                        ]
-                    ]
-                ),
-            ),
-            OnboardingStates["STEP1"]: OnboardingMessage(
-                text=(
-                    "Great! Before we start, let's quickly go through how this works and what to expect.\n\n"
-                    "It'll only take a minute.\n\n"
-                    "Ready?"
-                ),
-                keyboard=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Yes, I'm ready",
-                                callback_data=OnboardingStates["STEP2"],
-                            )
-                        ]
-                    ]
-                ),
-            ),
-            OnboardingStates["STEP2"]: OnboardingMessage(
-                text="First, have you ever reported suspicious posts or links on Facebook or Instagram before?",
-                keyboard=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Yes", callback_data=OnboardingStates["STEP3_YES"]
+                                "Yes", callback_data=OnboardingStates["REPORTED_BEFORE_YES"]
                             )
                         ],
                         [
                             InlineKeyboardButton(
-                                "No", callback_data=OnboardingStates["STEP3_NO"]
+                                "No", callback_data=OnboardingStates["REPORTED_BEFORE_NO"]
                             )
                         ],
                     ]
                 ),
             ),
-            OnboardingStates["STEP3_YES"]: OnboardingMessage(
-                text=(
-                    "Excellent!\n\n"
-                    "Your experience will be valuable. 👍\n\n"
-                    "Now, what do you think happens when a scam is reported on these platforms?"
-                ),
+            OnboardingStates["REPORTED_BEFORE_YES"]: OnboardingMessage(
+                text=("Excellent!\n\n" "What do you think happens next?"),
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "Taken down immediately, right?",
-                                callback_data=OnboardingStates["STEP4"],
+                                "It's taken down immediately",
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                         [
                             InlineKeyboardButton(
                                 "Platforms review it and take it down",
-                                callback_data=OnboardingStates["STEP4"],
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                         [
                             InlineKeyboardButton(
-                                "I'm not sure", callback_data=OnboardingStates["STEP4"]
+                                "I'm not sure", callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"]
                             )
                         ],
                     ]
                 ),
             ),
-            OnboardingStates["STEP3_NO"]: OnboardingMessage(
+            OnboardingStates["REPORTED_BEFORE_NO"]: OnboardingMessage(
                 text=(
                     "That's ok! 👍\n\n"
                     "Now, say you did report it, what do you think happens when a scam is reported on these platforms?"
@@ -118,89 +83,163 @@ class OnboardingMessages:
                     [
                         [
                             InlineKeyboardButton(
-                                "Taken down immediately, right?",
-                                callback_data=OnboardingStates["STEP4"],
+                                "It's taken down immediately",
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                         [
                             InlineKeyboardButton(
                                 "Platforms review it and take it down",
-                                callback_data=OnboardingStates["STEP4"],
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                         [
                             InlineKeyboardButton(
-                                "I'm not sure", callback_data=OnboardingStates["STEP4"]
+                                "I'm not sure", callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"]
                             )
                         ],
                     ]
                 ),
             ),
-            OnboardingStates["STEP4"]: OnboardingMessage(
+            OnboardingStates["WHAT_HAPPENS_NEXT"]: OnboardingMessage(
                 text=(
                     "Actually, reporting doesn't guarantee removal. 😕\n\n"
-                    "Platforms may review reports, but their policies aren't consistent.\n\n"
-                    "⚠️ Some suspicious links may stay up even after reporting and put Singaporeans at risk."
+                    "Platform policies aren't consistent.\n\n"
+                    "⚠️ Suspicious links stay up even after reporting.\n\n"
+                    "🚔 Platforms don't proactively share suspicious links with law enforcement.\n\n"
+                    "This creates a big blind spot and puts Singaporeans at risk. 👀"
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "Really? Tell me more",
-                                callback_data=OnboardingStates["STEP5"],
+                                "Oh! How to fix this?",
+                                callback_data=OnboardingStates["REPORTING_ISSUES"],
                             )
                         ]
                     ]
                 ),
             ),
-            OnboardingStates["STEP5"]: OnboardingMessage(
+            OnboardingStates["REPORTING_ISSUES"]: OnboardingMessage(
                 text=(
-                    "When users report scams on Facebook or Instagram, that information isn't shared with law enforcement. 🚔\n\n"
-                    "They can't take down a post till someone reports it to them specifically, which usually only happens after there's a victim.\n\n"
-                    "This creates a big blind spot. 👀"
+                    "Scamhunt is taking the first step.\n\n"
+                    "We're creating a database of suspicious social media links reported by users. This gives authorities much-needed visibility.\n\n"
+                    "📊 Data to improve platform policies & takedown processes\n\n"
+                    "👮‍♂️ Informs authorities about evolving threats"
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "That's frustrating. What then?",
-                                callback_data=OnboardingStates["STEP6"],
+                                "Got it! How can I help?",
+                                callback_data=OnboardingStates["SCAMHUNT_SOLUTION"],
                             )
                         ]
                     ]
                 ),
             ),
-            OnboardingStates["STEP6"]: OnboardingMessage(
+            OnboardingStates["SCAMHUNT_SOLUTION"]: OnboardingMessage(
                 text=(
-                    "🕵️‍♀️ Scamhunt is building a database of user-reported suspicious links on social media to give authorities the comprehensive visibility they currently lack.\n\n"
-                    "1️⃣ It provides data to push for better platform policies and effective takedown processes. 📊\n\n"
-                    "2️⃣ It informs authorities about new evolving threats. 🚨\n\n"
-                    "📸 Report any suspicious posts, ads, or messages on social media by sending links or screenshots to Scamhunt bot.\n\n"
-                    "Confirm a few details.\n\n"
-                    "We'll do the rest.\n\n"
-                    "That's it!"
+                    "📸 Report suspicious social media content to Scamhunt bot\n"
+                    "🔗 Send links or screenshots\n"
+                    "✅ Confirm details\n"
+                    "🤖 We'll handle the rest!"
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
+                        [
+                            InlineKeyboardButton(
+                                "Try with an example",
+                                callback_data=OnboardingStates["EXAMPLE_START"],
+                            )
+                        ],
                         [
                             InlineKeyboardButton(
                                 "Got it, let's start!",
                                 callback_data=OnboardingStates["END"],
                             )
-                        ]
+                        ],
                     ]
                 ),
             ),
             OnboardingStates["END"]: OnboardingMessage(
                 text=(
-                    "🙌 Hello hunter!\n\n"
-                    "🔗 Got a suspicious Facebook or Insta link? \n"
-                    "Just share directly or copy, paste and send it in chat\n\n"
-                    "🖼 Got a screenshot of the post? \n"
-                    "Look for the image in your photos and drop it in chat\n\n"
-                    "Got both? \n"
-                    "You can share both!"
-                )
+                    "Fantastic! \n\n"
+                    "Remember:\n"
+                    "🔍 ScamHunt provides data, not direct takedowns\n"
+                    "🕵️‍♀️ When you find a real suspicious post, send a link or screenshot to this bot.\n\n"
+                    "See you in the hunt! 🙌"
+                ),
+                keyboard=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
+                            )
+                        ]
+                    ]
+                ),
+            ),
+            OnboardingStates["EXAMPLE_START"]: OnboardingMessage(
+                text=(
+                    "Let's say you've found this post on Facebook:\n\n"
+                    '"Earn $5000 daily with this secret investment trick! Limited slots available. DM now! 💰💰"\n\n'
+                    "How would you report this?  🤔"
+                ),
+                keyboard=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Share the post link with Scamhunt bot",
+                                callback_data=OnboardingStates["EXAMPLE_SHARE"],
+                            )
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "Share a screenshot with Scamhunt bot",
+                                callback_data=OnboardingStates["EXAMPLE_SHARE"],
+                            )
+                        ],
+                    ]
+                ),
+            ),
+            OnboardingStates["EXAMPLE_SHARE"]: OnboardingMessage(
+                text=(
+                    "Try sharing something\n\n"
+                    "📱 Open your Facebook or Instagram app\n"
+                    "🔍 Find a post to share (Pick any for now)\n"
+                    "🔗 Copy the link or take a screenshot\n"
+                    "📤 Send it to the Scamhunt Telegram bot"
+                ),
+                keyboard=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Got it. I’ll share now",
+                                callback_data=OnboardingStates["EXAMPLE_WAITING"],
+                            )
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "Skip this for now",
+                                callback_data=OnboardingStates["END"],
+                            )
+                        ],
+                    ]
+                ),
+            ),
+            OnboardingStates["EXAMPLE_WAITING"]: OnboardingMessage(
+                text=("Ok! Waiting for you to share..\n\n"),
+                keyboard=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Skip this for now",
+                                callback_data=OnboardingStates["END"],
+                            )
+                        ]
+                    ]
+                ),
             ),
         }
 

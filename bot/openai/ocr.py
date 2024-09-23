@@ -80,7 +80,7 @@ async def ocr_image(file) -> (Screenshot, Exception):
     img_b64_str = img_to_base64(compressed_image)
     try:
         response = client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06", # earlier models dont support structured outputs
+            model="gpt-4o-2024-08-06",  # earlier models dont support structured outputs
             messages=[
                 {
                     "role": "user",

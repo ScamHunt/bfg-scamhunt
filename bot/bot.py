@@ -27,6 +27,7 @@ else:
 # set higher logging level for httpx to avoid all GET and POST requests being logged
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
+
 def main():
     """Start the bot."""
     # Create the Application and pass it your bot's token

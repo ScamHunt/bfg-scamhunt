@@ -1,7 +1,5 @@
 from .supabase import supabase
 from postgrest import APIError
-from dataclasses import dataclass
-import json
 import logging
 from datetime import datetime
 from typing import Optional
@@ -29,16 +27,23 @@ class Report:
         is_video: bool,
         is_social_media_post: bool,
         created_by_tg_id: int,
-        created_at: Optional[datetime],
+        likes: int,
+        comments: int,
+        shares: int,
         scam_types: list[ScamType],
-        links: list[str] = [],
-        phone_numbers: list[str] = [],
-        emails: list[str] = [],
-        likes: int = 0,
-        comments: int = 0,
-        shares: int = 0,
+        links: list[str],
+        phone_numbers: list[str],
+        emails: list[str],
+        id: Optional[int] = None,
+        platform: Optional[str] = None,
+        from_user: Optional[str] = None,
+        to_user: Optional[str] = None,
+        caption: Optional[str] = None,
+        location: Optional[str] = None,
+        report_url: Optional[str] = None,
+        created_at: Optional[datetime] = None,
     ):
-        self.id = id
+        self.id = id  # Let the database handle auto-increment
         self.platform = platform
         self.from_user = from_user
         self.to_user = to_user
@@ -79,7 +84,7 @@ def create_report(report: Report) -> (Report, Exception):
     del new["id"]
     try:
         data = supabase.table("report").insert(new).execute()
-        return (data.data, None)
+        return (data.data[0], None)
     except APIError as e:
         logging.error(f"Error creating report: {e}")
         return (None, e)
