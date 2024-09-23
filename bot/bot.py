@@ -57,7 +57,7 @@ def main():
     application.add_handler(CommandHandler("learn", commands.learn))
 
     # Error handler
-    # application.add_error_handler(utils.error)
+    application.add_error_handler(utils.error)
 
     # Start the Bot
     application.run_polling()
