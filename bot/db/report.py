@@ -3,7 +3,7 @@ from postgrest import APIError
 import logging
 from datetime import datetime
 from typing import Optional
-from ..openai.ocr import ScamType, Screenshot
+from ..openai.ocr import ScamType, Screenshot, Platform
 
 
 class Report:
@@ -11,6 +11,13 @@ class Report:
 
     def __init__(
         self,
+        id: Optional[int],
+        platform: Platform,
+        from_user: Optional[str],
+        to_user: Optional[str],
+        caption: Optional[str],
+        location: Optional[str],
+        report_url: Optional[str],
         description: str,
         reasoning: str,
         scam_likelihood: int,
