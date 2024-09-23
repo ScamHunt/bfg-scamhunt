@@ -3,10 +3,10 @@ from telegram.ext import ContextTypes
 
 from bot.messages import ScamHuntMessages as messages
 from bot.handler.utils import BotStates, ScamType
-from bot.utils import extract_urls
-from bot.utils import extract_phone_numbers
+from bot.extractors import extract_urls
+from bot.extractors import extract_phone_numbers
 from bot.handler.utils import get_inline_cancel_confirm_keyboard
-import bot.link as link
+from bot.extractors import extract_data
 from bot.messages import ScamHuntMessages as messages
 
 
@@ -17,7 +17,7 @@ async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(messages.link_sharing.replace("<link>", links))
     # Simulate analysis
     context.user_data["link"] = links
-    data, exception = await link.extract_data(links)
+    data, exception = await extract_data(links)
     if data:
         await update.message.reply_text(
             str(data), reply_markup=get_inline_cancel_confirm_keyboard()
