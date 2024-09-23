@@ -165,9 +165,6 @@ class OnboardingMessages:
             OnboardingStates["END"]: OnboardingMessage(
                 text=(
                     "Fantastic! \n\n"
-                    "Share accurate and consistent reports to:\n\n"
-                    "1. 📈 Boost your rank on our leaderboard\n"
-                    "2. 🏅 Unlock new achievements and titles\n\n"
                     "Remember:\n"
                     "🔍 ScamHunt provides data, not direct takedowns\n"
                     "🕵️‍♀️ When you find a real suspicious post, send a link or screenshot to this bot.\n\n"
