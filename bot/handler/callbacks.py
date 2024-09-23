@@ -16,6 +16,7 @@ import logging
 from bot.db import report
 from datetime import datetime
 
+
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
     if is_onboarding(update.callback_query.data):

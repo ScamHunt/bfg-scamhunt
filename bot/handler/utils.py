@@ -19,6 +19,7 @@ class ScamType(Enum):
     LINK = auto()
     TEXT = auto()
 
+
 class CallbackData:
     CANCEL = "cancel"
     CONFIRM = "confirm"
@@ -26,12 +27,14 @@ class CallbackData:
     NO = "no"
     REPORT_SCAM = "report_scam"
 
+
 class BotStates(Enum):
     START = auto()
     RECEIVE_SCREENSHOT = auto()
     RECEIVE_PHONE_NUMBER = auto()
     RECEIVE_LINK = auto()
     RECEIVE_TEXT = auto()
+
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
@@ -49,4 +52,3 @@ def get_inline_cancel_confirm_keyboard():
             ],
         ]
     )
-
