@@ -36,9 +36,8 @@ class ScamHuntMessages:
     looking_into_scam: str = "🔍 I'm looking into this. Please wait a moment... \n\n"
 
     help: str = (
-        "Singaporeans are losing $1 Million a week to social media scammers. Scamhunt is trying stop them. \n\n"
-        "🚨 /hunt or /report to send us suspicious social media links or screenshots \n"
-        "Send us a suspicious link directly or /hunt to start sharing?\n\n"
+        "Singaporeans are losing $1 Million a week to social media scammers. Scamhunt is trying to stop them. \n\n"
+        "🚨 Use /hunt or /report to send us suspicious social media links or screenshots.\n\n"
         "See you in the hunt!"
     )
 

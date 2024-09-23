@@ -10,11 +10,13 @@ from bot.handler.utils import (
 )
 
 from bot.onboarding.onboarding import is_onboarding, onboarding
+from bot.handler import commands
 
 from bot.openai.ocr import ocr_image
 import logging
 from bot.db import report
 from datetime import datetime
+
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -26,9 +28,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await query.answer()
     match query.data:
         case CallbackData.REPORT_SCAM:
-            await query.edit_message_text(
-                text=messages.new_scam_report, parse_mode="Markdown"
-            )
+            await commands.report(update, context)
         case CallbackData.CANCEL:
             await query.edit_message_text(
                 text=messages.cancel + messages.end_message,
