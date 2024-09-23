@@ -16,10 +16,10 @@ class User:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            id=data['id'],
-            username=data['username'],
-            first_name=data['first_name'],
-            last_name=data['last_name']
+            id=data["id"],
+            username=data["username"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
         )
 
     def to_dict(self):
@@ -42,13 +42,7 @@ def create_user(user: User) -> (User, Exception):
 
 def get_user(id: int) -> (User | None, Exception | None):
     try:
-        data = (
-            supabase.table("user")
-            .select("*")
-            .eq("id", id)
-            .limit(1)
-            .execute()
-        )
+        data = supabase.table("user").select("*").eq("id", id).limit(1).execute()
         if not data.data:
             return (None, None)
         user_data = data.data[0]
@@ -65,4 +59,3 @@ def get_user_reports(id: int) -> (list[Report], Exception):
     except APIError as e:
         logging.error(f"Error getting user reports: {e}")
         return (None, e)
-

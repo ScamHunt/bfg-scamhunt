@@ -35,7 +35,6 @@ class Report:
         location: Optional[str] = None,
         report_url: Optional[str] = None,
         created_at: Optional[datetime] = None,
-        
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
