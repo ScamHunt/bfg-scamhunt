@@ -7,10 +7,40 @@ from bot.onboarding.onboarding import onboarding_messages, OnboardingStates
 
 from bot.db.user import get_user, create_user, User
 
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle scam reporting process."""
-    await update.message.reply_text(messages.new_scam_report)
+    markup= InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "Show me an example", callback_data=OnboardingStates["EXAMPLE_START"]
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton("Hunt on Facebook", url="https://www.facebook.com")
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "Hunt on Instagram", url="https://www.instagram.com"
+                        )
+                    ],
+                ]
+    )
+    if update.message:
+        await update.message.reply_text(
+            messages.new_scam_report,
+            parse_mode="Markdown",
+            reply_markup=markup
+        )
+    else:
+        await update.callback_query.message.edit_text(
+            messages.new_scam_report,
+            parse_mode="Markdown",
+            reply_markup=markup
+        )
+    
 
 
 async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

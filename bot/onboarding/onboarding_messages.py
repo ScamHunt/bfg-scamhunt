@@ -1,4 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from bot.handler.callbacks import CallbackData
 
 
 OnboardingStates = {
@@ -171,7 +172,16 @@ class OnboardingMessages:
                     "🔍 ScamHunt provides data, not direct takedowns\n"
                     "🕵️‍♀️ When you find a real suspicious post, send a link or screenshot to this bot.\n\n"
                     "See you in the hunt! 🙌"
-                )
+                ),
+                keyboard=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
+                            )
+                        ]
+                    ]
+                ),
             ),
             OnboardingStates["EXAMPLE_START"]: OnboardingMessage(
                 text=(
