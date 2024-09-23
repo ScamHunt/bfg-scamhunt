@@ -3,7 +3,7 @@ from telegram.ext import ContextTypes
 
 from bot.messages import ScamHuntMessages as messages
 
-from bot.onboarding.onboarding import onboarding_messages
+from bot.onboarding.onboarding import onboarding_messages, OnboardingStates
 
 from bot.db.user import get_user, create_user, User
 
@@ -24,7 +24,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    state = "WELCOME"
+    state = next(iter(OnboardingStates))
     user, _ = get_user(update.effective_user.id)
     if user is None:
         user = User(

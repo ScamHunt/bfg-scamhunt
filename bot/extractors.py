@@ -9,6 +9,7 @@ from enum import Enum
 from bot.link import instagram
 from bot.link import facebook
 
+
 def extract_phone_numbers(update: Update) -> tuple[list[str], list[str]]:
     entities = update.message.entities
     return [
