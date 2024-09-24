@@ -16,11 +16,12 @@ from bot.openai.ocr import ocr_image
 import logging
 from bot.db import report, storage
 from datetime import datetime
-
+from bot.user_metrics import track_user_event
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
+    track_user_event(update, context)
     if is_onboarding(update.callback_query.data):
         await onboarding(update, context)
         return
