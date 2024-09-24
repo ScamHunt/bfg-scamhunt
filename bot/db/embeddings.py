@@ -16,7 +16,7 @@ def insert_embedding(embedding: list[float], report_id: int) -> None:
 
 def search_embeddings(embedding: list[float]) :
     try:
-        data = supabase.rpc("search_embeddings", {"query_embed": embedding ,"threshold": 0.7}).execute()
+        data = supabase.rpc("embeddings_query", {"match_threshold":0.7,"query_embedding":embedding}).execute()
         print(data)
         return data
     except Exception as e:

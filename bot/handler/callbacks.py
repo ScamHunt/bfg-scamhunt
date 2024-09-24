@@ -101,7 +101,8 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 )
             else:
                 context.user_data["embedding"] = embed_result.embedding
-                embeddings.search_embeddings(embed_result.embedding)
+                #test call for embedding search
+                # embeddings.search_embeddings(embed_result.embedding)
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,
