@@ -75,8 +75,6 @@ Follow these steps to extract the information:
 
 19. is screenshot: Determine if the image is a screenshot. Use "true" if it is a screenshot, "false" if it is not. if you are not sure, use "false". if you don't know what social media platform it is, use "false".
 
-17. Social media post or not social media post: Analyze if the post is a social media post. Output "true" if social media post, "false" if not.
-
 
 Before providing your final output, use a <scratchpad> to think through your analysis and reasoning for the scam likelihood rating and double-check your work to ensure there are no mistakes in extracting all of the required information.
 

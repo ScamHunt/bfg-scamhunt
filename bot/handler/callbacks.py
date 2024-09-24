@@ -42,10 +42,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 case BotStates.RECEIVE_SCREENSHOT:
                     await confirm_screenshot(update, context)
                 case _:
-                    report_response = report.create_report(context.user_data["report"])
+                    r,_ = report.create_report(context.user_data["report"])
                     track_user_event(update, context, Event.REPORT_CREATED)
-                    print("report_response",report_response)
-                    embeddings.insert_embedding(context.user_data["embedding"], report_response[0]["id"])
+                    embeddings.insert_embedding(context.user_data["embedding"], r["id"])
 
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
@@ -61,13 +60,14 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
     image = await context.bot.get_file(context.user_data["photo"].file_id)
     result, exception = await ocr_image(image)
-    embed_result,embed_exception =  await get_embedding(f"{result.caption} {result.description}")
-    if exception:
+    embed_result, embed_exception = await get_embedding(f"{result.caption} {result.description}")
+    if exception or embed_exception:
         await query.edit_message_text(
             text=messages.error + messages.end_message,
             parse_mode="Markdown",
         )
     else:
+        context.user_data["embedding"] = embed_result.embedding
         context.user_data["state"] = BotStates.START
         if result.is_screenshot:
             context.user_data["report"] = report.Report(
@@ -94,15 +94,8 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comments=result.comments,
                 shares=result.shares,
             )
-            if embed_exception:
-                await query.edit_message_text(
-                    text=messages.error + messages.end_message,
-                    parse_mode="Markdown",
-                )
-            else:
-                context.user_data["embedding"] = embed_result.embedding
-                #test call for embedding search
-                # embeddings.search_embeddings(embed_result.embedding)
+           
+                
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,

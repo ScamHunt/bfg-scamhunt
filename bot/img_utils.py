@@ -2,14 +2,14 @@ from PIL import Image
 import imagehash
 from typing import Tuple
 from io import BytesIO
+import logging
+logger = logging.getLogger(__name__)
 
 
 
-def generate_image_hashes(image_bytes:bytearray,image_size:Tuple[int,int]):
-    print("generating image hashes")
+def generate_image_hashes(image_bytes:bytearray) -> Tuple[str, str, str, str, str, str]:
+    logger.debug("generating image hashes")
     image = Image.open(BytesIO(image_bytes))
-    # image = Image.frombytes(mode="RGB", size=image_size, data=image_bytes)
-    print(image.size)
     p_hash = imagehash.phash(image)
     avg_hash = imagehash.average_hash(image)
     color_hash = imagehash.colorhash(image)
