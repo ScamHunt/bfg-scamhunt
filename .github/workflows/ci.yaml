@@ -1,8 +1,6 @@
 name: Python CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -28,4 +26,13 @@ jobs:
       run: |
         python -m flake8 .
       continue-on-error: true
+
+    - name: build
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile
+        platforms: linux/amd64
+        push: false
+        tags: latest
 
