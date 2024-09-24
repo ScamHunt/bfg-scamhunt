@@ -14,9 +14,9 @@ from bot.handler import commands
 
 from bot.openai.ocr import ocr_image
 import logging
-from bot.db import report, storage
+from bot.db import report
 from datetime import datetime
-from bot.user_metrics import track_user_event
+from bot.user_metrics import track_user_event, Event
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -41,8 +41,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 case BotStates.RECEIVE_SCREENSHOT:
                     await confirm_screenshot(update, context)
                 case _:
-                    r, _ = report.create_report(context.user_data["report"])
-                    await storage.upload_img_to_supabase(context.user_data["image"], update.effective_user.id, r["id"])
+                    report.create_report(context.user_data["report"])
+                    track_user_event(update, context, Event.REPORT_CREATED)
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
@@ -89,7 +89,6 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comments=result.comments,
                 shares=result.shares,
             )
-            context.user_data["image"] = image
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,
@@ -97,7 +96,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 parse_mode="Markdown",
             )
         else:
-            text = "Oops! 🙈 It looks like what you shared isn't a screenshot Please try again with a social media screenshot. 📸"
+            text = "Oops! 🙈 It looks like what you shared isn't a screenshot Please try again with a real screenshot. 📸"
             await query.edit_message_text(
                 text=text,
                 parse_mode="Markdown",
