@@ -14,7 +14,11 @@ amplitude = Amplitude(api_key=os.getenv("AMPLITUDE_API_KEY"))
 @dataclass
 class Event():
     REPORT_CREATED = "Report Created"
-    
+    CANCEL = "Cancel"
+    LEARN = "Learn"
+    HELP = "Help"
+    START = "Start"
+
 def generate_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str):
     return BaseEvent(
         user_id=str(update.effective_user.id),

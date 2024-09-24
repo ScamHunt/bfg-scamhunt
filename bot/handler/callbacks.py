@@ -31,6 +31,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         case CallbackData.REPORT_SCAM:
             await commands.report(update, context)
         case CallbackData.CANCEL:
+            track_user_event(update, context, Event.CANCEL)
             await query.edit_message_text(
                 text=messages.cancel + messages.end_message,
                 parse_mode="Markdown",
