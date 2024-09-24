@@ -73,7 +73,7 @@ Follow these steps to extract the information:
 - love
 - other
 
-19. is screenshot: Determine if the image is a screenshot. Use "true" if it is a screenshot, "false" if it is not.
+19. is screenshot: Determine if the image is a screenshot. Use "true" if it is a screenshot, "false" if it is not. if you are not sure, use "false". if you don't know what social media platform it is, use "false".
 
 17. Social media post or not social media post: Analyze if the post is a social media post. Output "true" if social media post, "false" if not.
 

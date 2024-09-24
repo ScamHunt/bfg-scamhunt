@@ -155,6 +155,17 @@ files = [
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "amplitude-analytics"
+version = "1.1.4"
+description = "The official Amplitude backend Python SDK for server-side instrumentation."
+optional = false
+python-versions = ">=3.6, <4"
+files = [
+    {file = "amplitude-analytics-1.1.4.tar.gz", hash = "sha256:9f05dc461459cfef15df8795895971745193fb74ab4e8a561e96bb208f11860e"},
+    {file = "amplitude_analytics-1.1.4-py3-none-any.whl", hash = "sha256:802d9b3a20d095d49074610dcd7e8834e5fcaff5c99d25d3153c03a163d73889"},
+]
+
+[[package]]
 name = "annotated-types"
 version = "0.7.0"
 description = "Reusable constraint types to use with typing.Annotated"
@@ -2581,4 +2592,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "da3ae9fcda4872d83f851cf7814fac8f0965ec5ced6d9fdcf521b2a4a39a0bfb"
+content-hash = "019764d2675b1355bf5c94dae49bef79a2ef8a72911a232ac3e68daa8b3e70ce"

@@ -11,9 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --env TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN} --env OPENAI_API_KEY=${OPENAI_API_KEY} --env SUPABASE_KEY=${SUPABASE_KEY}
+      - run: flyctl deploy --env TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN} --env OPENAI_API_KEY=${OPENAI_API_KEY} --env SUPABASE_KEY=${SUPABASE_KEY} --env AMPLITUDE_API_KEY=${AMPLITUDE_API_KEY}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}

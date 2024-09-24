@@ -39,12 +39,14 @@ class OnboardingMessages:
                     [
                         [
                             InlineKeyboardButton(
-                                "Yes", callback_data=OnboardingStates["REPORTED_BEFORE_YES"]
+                                "Yes",
+                                callback_data=OnboardingStates["REPORTED_BEFORE_YES"],
                             )
                         ],
                         [
                             InlineKeyboardButton(
-                                "No", callback_data=OnboardingStates["REPORTED_BEFORE_NO"]
+                                "No",
+                                callback_data=OnboardingStates["REPORTED_BEFORE_NO"],
                             )
                         ],
                     ]
@@ -68,7 +70,8 @@ class OnboardingMessages:
                         ],
                         [
                             InlineKeyboardButton(
-                                "I'm not sure", callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"]
+                                "I'm not sure",
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                     ]
@@ -95,7 +98,8 @@ class OnboardingMessages:
                         ],
                         [
                             InlineKeyboardButton(
-                                "I'm not sure", callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"]
+                                "I'm not sure",
+                                callback_data=OnboardingStates["WHAT_HAPPENS_NEXT"],
                             )
                         ],
                     ]
@@ -174,7 +178,8 @@ class OnboardingMessages:
                     [
                         [
                             InlineKeyboardButton(
-                                "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
+                                "Report suspicious post",
+                                callback_data=CallbackData.REPORT_SCAM,
                             )
                         ]
                     ]

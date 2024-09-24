@@ -17,11 +17,12 @@ from bot.openai.embeddings import get_embedding
 import logging
 from bot.db import report,embeddings
 from datetime import datetime
-
+from bot.user_metrics import track_user_event, Event
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
+    track_user_event(update, context)
     if is_onboarding(update.callback_query.data):
         await onboarding(update, context)
         return
@@ -42,6 +43,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                     await confirm_screenshot(update, context)
                 case _:
                     report_response = report.create_report(context.user_data["report"])
+                    track_user_event(update, context, Event.REPORT_CREATED)
                     print("report_response",report_response)
                     embeddings.insert_embedding(context.user_data["embedding"], report_response[0]["id"])
 
