@@ -11,13 +11,7 @@ class Report:
 
     def __init__(
         self,
-        id: Optional[int],
         platform: Platform,
-        from_user: Optional[str],
-        to_user: Optional[str],
-        caption: Optional[str],
-        location: Optional[str],
-        report_url: Optional[str],
         description: str,
         reasoning: str,
         scam_likelihood: int,
@@ -35,7 +29,6 @@ class Report:
         phone_numbers: list[str],
         emails: list[str],
         id: Optional[int] = None,
-        platform: Optional[str] = None,
         from_user: Optional[str] = None,
         to_user: Optional[str] = None,
         caption: Optional[str] = None,
