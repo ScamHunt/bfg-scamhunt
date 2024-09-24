@@ -13,8 +13,9 @@ from bot.onboarding.onboarding import is_onboarding, onboarding
 from bot.handler import commands
 
 from bot.openai.ocr import ocr_image
+from bot.openai.embeddings import get_embedding
 import logging
-from bot.db import report
+from bot.db import report,embeddings
 from datetime import datetime
 from bot.user_metrics import track_user_event, Event
 
@@ -42,8 +43,10 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 case BotStates.RECEIVE_SCREENSHOT:
                     await confirm_screenshot(update, context)
                 case _:
-                    report.create_report(context.user_data["report"])
+                    r,_ = report.create_report(context.user_data["report"])
                     track_user_event(update, context, Event.REPORT_CREATED)
+                    embeddings.insert_embedding(context.user_data["embedding"], r["id"])
+
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
@@ -58,12 +61,14 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
     image = await context.bot.get_file(context.user_data["photo"].file_id)
     result, exception = await ocr_image(image)
-    if exception:
+    embed_result, embed_exception = await get_embedding(f"{result.caption} {result.description}")
+    if exception or embed_exception:
         await query.edit_message_text(
             text=messages.error + messages.end_message,
             parse_mode="Markdown",
         )
     else:
+        context.user_data["embedding"] = embed_result.embedding
         context.user_data["state"] = BotStates.START
         if result.is_screenshot:
             context.user_data["report"] = report.Report(
@@ -90,6 +95,8 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comments=result.comments,
                 shares=result.shares,
             )
+           
+                
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,
