@@ -13,8 +13,9 @@ from bot.onboarding.onboarding import is_onboarding, onboarding
 from bot.handler import commands
 
 from bot.openai.ocr import ocr_image
+from bot.openai.embeddings import get_embedding
 import logging
-from bot.db import report
+from bot.db import report,embeddings
 from datetime import datetime
 
 
@@ -40,7 +41,10 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 case BotStates.RECEIVE_SCREENSHOT:
                     await confirm_screenshot(update, context)
                 case _:
-                    report.create_report(context.user_data["report"])
+                    report_response = report.create_report(context.user_data["report"])
+                    print("report_response",report_response)
+                    embeddings.insert_embedding(context.user_data["embedding"], report_response[0]["id"])
+
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
@@ -55,6 +59,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
     image = await context.bot.get_file(context.user_data["photo"].file_id)
     result, exception = await ocr_image(image)
+    embed_result,embed_exception =  await get_embedding(f"{result.caption} {result.description}")
     if exception:
         await query.edit_message_text(
             text=messages.error + messages.end_message,
@@ -87,6 +92,14 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comments=result.comments,
                 shares=result.shares,
             )
+            if embed_exception:
+                await query.edit_message_text(
+                    text=messages.error + messages.end_message,
+                    parse_mode="Markdown",
+                )
+            else:
+                context.user_data["embedding"] = embed_result.embedding
+                embeddings.search_embeddings(embed_result.embedding)
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,
