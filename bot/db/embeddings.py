@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def insert_embedding(embedding: list[float], report_id: int) -> None:
-    print("report_id", report_id)
+    logger.info("Inserting embedding for report_id: %s", report_id)
     try:
         supabase.table("report_embedding").insert(
             {"embeddings": embedding, "report_id": report_id}

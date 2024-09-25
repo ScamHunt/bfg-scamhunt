@@ -2,6 +2,9 @@ from .supabase import supabase
 from postgrest import APIError
 import logging
 from .report import Report
+from telegram import Update
+from telegram.ext import ContextTypes
+
 logging.basicConfig(level=logging.INFO)
 
 class Feedback:
@@ -17,7 +20,7 @@ class Feedback:
 
 
 class User:
-    def __init__(self, id: int, username: str, first_name: str, last_name: str):
+    def __init__(self, id: int, username: str, first_name: str, last_name: str, feedback: Feedback = None):
         self.id = id
         self.username = username
         self.first_name = first_name
@@ -89,3 +92,19 @@ def update_user_feedback(id: int, feedback: Feedback) -> (User, Exception):
     except APIError as e:
         logging.error(f"Error updating user feedback: {e}")
         return (None, e)
+
+def create_user_if_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logging.info(f"Creating user if not exists for {update.effective_user.id}")
+    user, _ = get_user(update.effective_user.id)
+    if user is None:
+        user = User(
+            id=update.effective_user.id,
+            username=update.effective_user.username,
+            first_name=update.effective_user.first_name,
+            last_name=update.effective_user.last_name,
+        )
+        create_user(user)
+        context.user_data["is_new"] = True
+        logging.info(f"New user: {user}")
+    else:
+        context.user_data["is_new"] = False

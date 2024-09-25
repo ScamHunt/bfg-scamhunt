@@ -68,7 +68,7 @@ class Report:
     @classmethod
     def from_screenshot(self, screenshot: Screenshot, created_by_tg_id: int):
         self.created_by_tg_id = created_by_tg_id
-        for key, value in screenshot.dict().items():
+        for key, value in screenshot.model_dump().items():
             setattr(self, key, value)
 
 

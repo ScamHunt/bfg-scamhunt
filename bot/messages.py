@@ -42,7 +42,7 @@ class ScamHuntMessages:
     )
 
     error: str = (
-        "🚫 *Error!* Please try again. If the problem persists, contact @scamhuntbot"
+        "🚫 *Error!* Please try again. If the problem persists, contact @scamhunt"
     )
 
     scam_type: str = (

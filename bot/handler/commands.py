@@ -5,7 +5,7 @@ from bot.messages import ScamHuntMessages as messages
 
 from bot.onboarding.onboarding import onboarding_messages, OnboardingStates
 
-from bot.db.user import get_user, create_user, User
+from bot.db.user import create_user_if_not_exists
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bot.user_metrics import track_user_event, Event
@@ -55,18 +55,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     track_user_event(update, context, Event.START)
     state = next(iter(OnboardingStates))
-    logging.info(f"Starting onboarding for user: {update.effective_user.id}")
-    user, _ = get_user(update.effective_user.id)
-    if user is None:
-        user = User(
-            id=update.effective_user.id,
-            username=update.effective_user.username,
-            first_name=update.effective_user.first_name,
-            last_name=update.effective_user.last_name,
-        )
-        create_user(user)
-        context.user_data["is_new"] = True
-        logging.info(f"New user: {user}")
+    create_user_if_not_exists(update, context)
     message = onboarding_messages.get_message(state=state)
     await update.message.reply_text(message.text, reply_markup=message.keyboard)
 

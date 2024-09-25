@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 
 amplitude_logger = logging.getLogger("amplitude")
-amplitude_logger.setLevel(logging.DEBUG)
+amplitude_logger.setLevel(logging.WARN)
 amplitude = Amplitude(api_key=os.getenv("AMPLITUDE_API_KEY"))
 
 
@@ -18,6 +18,7 @@ class Event:
     LEARN = "Learn"
     HELP = "Help"
     START = "Start"
+    CONFIRM_SCREENSHOT = "Confirm Screenshot"
 
 
 def generate_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str):
