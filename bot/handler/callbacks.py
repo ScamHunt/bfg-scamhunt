@@ -10,6 +10,7 @@ from bot.handler.utils import (
     get_inline_cancel_confirm_keyboard,
 )
 
+import time
 from bot.handler.receiver import extract_urls, extract_platform
 from bot.onboarding.onboarding import is_onboarding, onboarding
 from bot.handler import commands
@@ -23,11 +24,12 @@ from bot.user_metrics import track_user_event, Event
 from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
-
+from bot.handler.utils import get_inline_keyboard_for_scam_result
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
     track_user_event(update, context)
+    await scam_result_feedback(update, context)
     if is_onboarding(update.callback_query.data):
         await onboarding(update, context)
         return
@@ -70,44 +72,13 @@ async def confirm_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     create_user_if_not_exists(update, context)
     r, err = report.create_report(context.user_data["report"])
     track_user_event(update, context, Event.REPORT_CREATED)
-    query = update.callback_query
-    await query.edit_message_text(
-        text=messages.confirm,
-        parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Hunt on Facebook", url="https://www.facebook.com"
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "Hunt on Instagram", url="https://www.instagram.com"
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "Share your feedback", callback_data=CallbackData.FEEDBACK
-                    )
-                ],
-            ]
-        ),
-    )
-
-    if context.user_data["is_new"]:
-        await commands.feedback(update, context)
+    await send_confirmation_message(update, context)
 
 
 async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     track_user_event(update, context, Event.CONFIRM_SCREENSHOT)
     query = update.callback_query
-    await query.edit_message_text(
+    message = await query.edit_message_text(
         text=messages.looking_into_scam, parse_mode="Markdown"
     )
 
@@ -124,8 +95,32 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
             parse_mode="Markdown",
         )
         return
+    
+    chat_id = update.effective_chat.id
+    if result.scam_likelihood > 80:
+        text=(
+                "🚨 Very likely a scam\n"
+                "Exercise extreme caution and avoid engaging further.\n\n"
+                "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
+                f"*Reasoning:*\n{result.reasoning}\n\n"
+                "Did we get it right?"
+            )
+    else:
+        text=(
+                "🔶 Not very likely a scam\n"
+                "However, please remain cautious and use your best judgment.\n\n"
+                "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
+                f"*Reasoning:*\n{result.reasoning}\n\n"
+                "Did we get it right?"
+            )
+        
+    await message.edit_text(
+        text=text,
+        parse_mode="Markdown",
+        reply_markup=get_inline_keyboard_for_scam_result(),
+    )
 
-    context.user_data["report"] = report.Report(
+    r = report.Report(
         platform=result.platform,
         from_user=result.from_user,
         to_user=result.to_user,
@@ -150,7 +145,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
 
     create_user_if_not_exists(update, context)
-    r, err = report.create_report(context.user_data["report"])
+    r, err = report.create_report(r)
     track_user_event(update, context, Event.REPORT_CREATED)
 
     embed_result, embed_exception = await get_embedding(
@@ -166,7 +161,9 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     else:
         logging.error(f"Report created without embedding or id: {err}")
 
-    await query.edit_message_text(
+
+async def send_confirmation_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.callback_query.edit_message_text(
         text=messages.confirm,
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(
@@ -197,3 +194,9 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     if context.user_data["is_new"]:
         await commands.feedback(update, context)
+
+
+async def scam_result_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.callback_query.data in [CallbackData.YES, CallbackData.NO, CallbackData.UNSURE]:
+        # TODO: Add to report in db
+        await send_confirmation_message(update, context)
