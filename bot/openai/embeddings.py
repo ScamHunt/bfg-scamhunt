@@ -17,15 +17,18 @@ class Embedding(BaseModel):
     embedding: list[float]
 
 
-async def get_embedding(text: str) -> Union[Embedding, Exception]:
+async def get_embedding(text: str, count: int = 1) -> Union[Embedding, Exception]:
     logger.info(f"Getting embedding for text {text}")
     try:
-        response = client.embeddings.create(
-            model="text-embedding-3-large", input=text, dimensions=256
-        )
+        if count < 3:
+            response = client.embeddings.create(
+                model="text-embedding-3-large", input=text, dimensions=256
+            )
+        else:
+            return (None, e)
     except Exception as e:
         logger.error(f"Error getting embedding: {e}")
-        return (None, e)
+        return await get_embedding(text, count + 1)
     else:
         logger.info(f"Got embedding for text")
     return (Embedding(text=text, embedding=response.data[0].embedding), None)
