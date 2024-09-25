@@ -63,8 +63,10 @@ class FeedbackMessages:
             ]
         ]
         return FeedbackMessage(
-            text=("How likely are you to use this bot again for reporting scams?\n\n"
-                  "1 Very Unlikely -- 5 Very Likely"),
+            text=(
+                "How likely are you to use this bot again for reporting scams?\n\n"
+                "1 Very Unlikely -- 5 Very Likely"
+            ),
             keyboard=InlineKeyboardMarkup(buttons),
         )
 

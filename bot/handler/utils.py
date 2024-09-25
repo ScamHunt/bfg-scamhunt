@@ -63,8 +63,12 @@ def get_inline_cancel_confirm_keyboard():
     return InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Report as scam ✅", callback_data=CallbackData.CONFIRM),
-                InlineKeyboardButton("Don't report ❌", callback_data=CallbackData.CANCEL),
+                InlineKeyboardButton(
+                    "Report as scam ✅", callback_data=CallbackData.CONFIRM
+                ),
+                InlineKeyboardButton(
+                    "Don't report ❌", callback_data=CallbackData.CANCEL
+                ),
             ],
         ]
     )

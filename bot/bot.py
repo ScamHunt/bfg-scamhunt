@@ -38,7 +38,7 @@ def main():
     application.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND & filters.Entity("url"),
-            receiver.link,
+            callbacks.confirm_link,
         )
     )
     application.add_handler(
@@ -59,7 +59,7 @@ def main():
     # Error handler
     application.add_error_handler(utils.error)
     application.add_handler(CommandHandler("feedback", commands.feedback))
-    
+
     # Handle all other messages
     application.add_handler(MessageHandler(filters.ALL, commands.report))
     # Start the Bot

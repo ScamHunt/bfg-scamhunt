@@ -23,6 +23,7 @@ from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
 
+
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
     track_user_event(update, context)
@@ -44,25 +45,85 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
+            if context.user_data["state"] == BotStates.RECEIVE_SCREENSHOT:
                 await confirm_screenshot(update, context)
+            elif context.user_data["state"] == BotStates.RECEIVE_LINK:
+                await confirm_link(update, context)
         case CallbackData.FEEDBACK:
             await commands.feedback(update, context)
+
+
+async def confirm_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    track_user_event(update, context, Event.CONFIRM_LINK)
+    links = extract_urls(update)
+    platform = extract_platform(links[0])
+    context.user_data["state"] = BotStates.START
+    context.user_data["report"] = report.Report(
+        platform=platform.value,
+        report_url=links[0],
+        is_advertisement=False,
+        is_sponsored=False,
+        is_photo=False,
+        is_video=False,
+        is_social_media_post=False,
+        created_by_tg_id=update.effective_user.id,  # Using the Telegram user's ID
+    )
+
+    create_user_if_not_exists(update, context)
+    r, err = report.create_report(context.user_data["report"])
+    track_user_event(update, context, Event.REPORT_CREATED)
+    query = update.callback_query
+    await query.edit_message_text(
+        text=messages.confirm,
+        parse_mode="Markdown",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Hunt on Facebook", url="https://www.facebook.com"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Hunt on Instagram", url="https://www.instagram.com"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Share your feedback", callback_data=CallbackData.FEEDBACK
+                    )
+                ],
+            ]
+        ),
+    )
+
+    if context.user_data["is_new"]:
+        await commands.feedback(update, context)
 
 
 async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     track_user_event(update, context, Event.CONFIRM_SCREENSHOT)
     query = update.callback_query
-    await query.edit_message_text(text=messages.looking_into_scam, parse_mode="Markdown")
-    
+    await query.edit_message_text(
+        text=messages.looking_into_scam, parse_mode="Markdown"
+    )
+
     image = await context.bot.get_file(context.user_data["photo"].file_id)
     result, exception = await ocr_image(image)
     context.user_data["state"] = BotStates.START
-    
+
     if not result.is_screenshot or result.platform == Platform.UNKNOWN:
-        logging.error(f"Invalid platform: {result.platform}, Is screenshot: {result.is_screenshot}")
+        logging.error(
+            f"Invalid platform: {result.platform}, Is screenshot: {result.is_screenshot}"
+        )
         await query.edit_message_text(
             text="Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again.",
-            parse_mode="Markdown"
+            parse_mode="Markdown",
         )
         return
 
@@ -95,7 +156,9 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     r, err = report.create_report(context.user_data["report"])
     track_user_event(update, context, Event.REPORT_CREATED)
 
-    embed_result, embed_exception = await get_embedding(f"{result.caption} {result.description}")
+    embed_result, embed_exception = await get_embedding(
+        f"{result.caption} {result.description}"
+    )
     if exception or embed_exception:
         await query.edit_message_text(text=messages.error, parse_mode="Markdown")
         return
@@ -109,12 +172,30 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     await query.edit_message_text(
         text=messages.confirm,
         parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Hunt on Facebook", url="https://www.facebook.com")],
-            [InlineKeyboardButton("Hunt on Instagram", url="https://www.instagram.com")],
-            [InlineKeyboardButton("Report suspicious post", callback_data=CallbackData.REPORT_SCAM)],
-            [InlineKeyboardButton("Share your feedback", callback_data=CallbackData.FEEDBACK)]
-        ])
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Hunt on Facebook", url="https://www.facebook.com"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Hunt on Instagram", url="https://www.instagram.com"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Report suspicious post", callback_data=CallbackData.REPORT_SCAM
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Share your feedback", callback_data=CallbackData.FEEDBACK
+                    )
+                ],
+            ]
+        ),
     )
 
     if context.user_data["is_new"]:

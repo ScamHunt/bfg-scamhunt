@@ -30,9 +30,9 @@ def extract_urls(update: Update) -> tuple[list[str], list[str]]:
 
 
 class SocialMedia(Enum):
-    FACEBOOK = 1
-    INSTAGRAM = 2
-    UNKNOWN = 3
+    FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
+    UNKNOWN = "unknown"
 
 
 class Exceptions:
@@ -48,17 +48,3 @@ def extract_platform(link) -> SocialMedia:
         return SocialMedia.FACEBOOK
     else:
         return SocialMedia.UNKNOWN
-
-
-# Function to handle the incoming link
-async def extract_data(link):
-    logging.info(f"Received link: {link}")
-
-    platform = extract_platform(link)
-
-    if platform == SocialMedia.INSTAGRAM:
-        return await instagram.handle(link)
-    elif platform == SocialMedia.FACEBOOK:
-        return await facebook.handle(link)
-    else:
-        return (None, Exceptions.UnknownPlatform)

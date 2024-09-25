@@ -14,9 +14,7 @@ class ScamHuntMessages:
         "👯‍ Feel free to share both!"
     )
 
-    link_sharing: str = (
-        "🚀 Thanks for sharing this <link> scam! I'm checking out that link right now... 🔍\n\n"
-    )
+    link_sharing: str = "🚀 sReady to report this post as a potential scam?"
 
     phone_number_sharing: str = (
         "📞 *Thanks for sharing this phone number(s): <phone_number> !*🔍\n\n"
@@ -24,9 +22,7 @@ class ScamHuntMessages:
         "If you haven't installed ScamShield yet, please visit https://www.scamshield.gov.sg for more information."
     )
 
-    screenshot_sharing: str = (
-        "Ready to report this post as a potential scam?"
-    )
+    screenshot_sharing: str = "Ready to report this post as a potential scam?"
 
     looking_into_scam: str = "🔍 I'm looking into this. Please wait a moment... \n\n"
 
@@ -36,9 +32,7 @@ class ScamHuntMessages:
         "See you in the hunt!"
     )
 
-    error: str = (
-        "🚫 Error! Please try again."
-    )
+    error: str = "🚫 Error! Please try again."
 
     scam_type: str = (
         "🙏 *Thank you for sharing a <platform> screenshot\n\n"
