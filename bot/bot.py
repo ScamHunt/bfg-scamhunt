@@ -38,7 +38,7 @@ def main():
     application.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND & filters.Entity("url"),
-            callbacks.confirm_link,
+            receiver.link,
         )
     )
     application.add_handler(

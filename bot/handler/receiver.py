@@ -36,7 +36,7 @@ async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a link for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_LINK
-    context.user_data["link"] = update.message.text
+    context.user_data["links"] = extract_urls(update)
     await update.message.reply_text(
         messages.link_sharing,
         reply_markup=get_inline_cancel_confirm_keyboard(),

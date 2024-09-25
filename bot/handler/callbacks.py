@@ -10,6 +10,7 @@ from bot.handler.utils import (
     get_inline_cancel_confirm_keyboard,
 )
 
+from bot.handler.receiver import extract_urls, extract_platform
 from bot.onboarding.onboarding import is_onboarding, onboarding
 from bot.handler import commands
 
@@ -40,10 +41,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             await commands.report(update, context)
         case CallbackData.CANCEL:
             track_user_event(update, context, Event.CANCEL)
-            await query.edit_message_text(
-                text=messages.cancel + messages.end_message,
-                parse_mode="Markdown",
-            )
+            await commands.report(update, context)
         case CallbackData.CONFIRM:
             if context.user_data["state"] == BotStates.RECEIVE_SCREENSHOT:
                 await confirm_screenshot(update, context)
@@ -55,7 +53,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def confirm_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     track_user_event(update, context, Event.CONFIRM_LINK)
-    links = extract_urls(update)
+    links = context.user_data["links"]
     platform = extract_platform(links[0])
     context.user_data["state"] = BotStates.START
     context.user_data["report"] = report.Report(

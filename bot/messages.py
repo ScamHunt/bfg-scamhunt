@@ -14,7 +14,7 @@ class ScamHuntMessages:
         "👯‍ Feel free to share both!"
     )
 
-    link_sharing: str = "🚀 sReady to report this post as a potential scam?"
+    link_sharing: str = "🚀 Ready to report this post as a potential scam?"
 
     phone_number_sharing: str = (
         "📞 *Thanks for sharing this phone number(s): <phone_number> !*🔍\n\n"
