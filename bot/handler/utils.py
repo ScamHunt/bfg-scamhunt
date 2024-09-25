@@ -39,8 +39,10 @@ class BotStates(Enum):
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
     logging.error(f"Update {update} caused error {context.error}")
-    if update:
+    if update.message:
         await update.message.reply_text(messages.error)
+    elif update.callback_query:
+        await update.callback_query.message.edit_text(messages.error)
 
 
 def get_inline_cancel_confirm_keyboard():
