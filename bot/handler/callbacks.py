@@ -38,15 +38,16 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 parse_mode="Markdown",
             )
         case CallbackData.CONFIRM:
-            logging.info(context.user_data)
             match context.user_data["state"]:
                 case BotStates.RECEIVE_SCREENSHOT:
                     await confirm_screenshot(update, context)
                 case _:
-                    r,_ = report.create_report(context.user_data["report"])
+                    r, err = report.create_report(context.user_data["report"])
                     track_user_event(update, context, Event.REPORT_CREATED)
-                    embeddings.insert_embedding(context.user_data["embedding"], r["id"])
-
+                    if err is None and "embedding" in context.user_data and "id" in r:
+                        embeddings.insert_embedding(context.user_data["embedding"], r["id"])
+                    else:
+                        logging.error(f"Report created without embedding or id: {err}")
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
