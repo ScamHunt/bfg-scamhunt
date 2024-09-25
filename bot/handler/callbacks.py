@@ -21,6 +21,7 @@ from bot.user_metrics import track_user_event, Event
 from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 
+
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
     track_user_event(update, context)
@@ -115,9 +116,7 @@ async def confirm_report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     r, err = report.create_report(context.user_data["report"])
     track_user_event(update, context, Event.REPORT_CREATED)
     if err is None and "embedding" in context.user_data and "id" in r:
-        embeddings.insert_embedding(
-            context.user_data["embedding"], r["id"]
-        )
+        embeddings.insert_embedding(context.user_data["embedding"], r["id"])
     else:
         logging.error(f"Report created without embedding or id: {err}")
     await update.callback_query.edit_message_text(

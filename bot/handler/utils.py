@@ -40,23 +40,23 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
     logging.error(f"Error occurred: {context.error}", exc_info=context.error)
     logging.error(f"Update that caused the error: {update}")
-    
+
     if update.effective_user:
         user_info = f"User ID: {update.effective_user.id}, Username: {update.effective_user.username}"
         logging.error(f"User information: {user_info}")
-    
+
     if update.effective_chat:
         chat_info = f"Chat ID: {update.effective_chat.id}, Chat Type: {update.effective_chat.type}"
         logging.error(f"Chat information: {chat_info}")
-    
+
     if update.message:
         logging.error(f"Message text: {update.message.text}")
         await update.message.reply_text(messages.error)
-        
+
     elif update.callback_query:
         logging.error(f"Callback query data: {update.callback_query.data}")
         await update.callback_query.message.edit_text(messages.error)
-    
+
 
 def get_inline_cancel_confirm_keyboard():
     return InlineKeyboardMarkup(
