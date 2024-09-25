@@ -12,29 +12,28 @@ class Report:
     def __init__(
         self,
         platform: Platform,
-        description: str,
-        reasoning: str,
-        scam_likelihood: int,
         is_advertisement: bool,
         is_sponsored: bool,
         is_photo: bool,
         is_video: bool,
         is_social_media_post: bool,
         created_by_tg_id: int,
-        likes: int,
-        comments: int,
-        shares: int,
-        scam_types: list[ScamType],
-        links: list[str],
-        phone_numbers: list[str],
-        emails: list[str],
+        emails: list[str] = [],
+        phone_numbers: list[str] = [],
+        likes: int = 0,
+        comments: int = 0,
+        shares: int = 0,
+        links: list[str] = [],
+        scam_types: list[ScamType] = [],
         id: Optional[int] = None,
+        reasoning: Optional[str] = None,
+        description: Optional[str] = None,
+        scam_likelihood: Optional[int] = None,
         from_user: Optional[str] = None,
         to_user: Optional[str] = None,
         caption: Optional[str] = None,
         location: Optional[str] = None,
         report_url: Optional[str] = None,
-        created_at: Optional[datetime] = None,
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
@@ -52,7 +51,6 @@ class Report:
         self.is_video = is_video
         self.is_social_media_post = is_social_media_post
         self.created_by_tg_id = created_by_tg_id
-        self.created_at = created_at
         self.scam_types = scam_types
         self.links = links
         self.phone_numbers = phone_numbers

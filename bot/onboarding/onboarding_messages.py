@@ -166,7 +166,6 @@ class OnboardingMessages:
             ),
             OnboardingStates["END"]: OnboardingMessage(
                 text=(
-                    "Fantastic! \n\n"
                     "Remember:\n"
                     "🔍 ScamHunt provides data, not direct takedowns\n"
                     "🕵️‍♀️ When you find a real suspicious post, send a link or screenshot to this bot.\n\n"

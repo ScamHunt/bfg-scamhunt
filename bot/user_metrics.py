@@ -19,6 +19,7 @@ class Event:
     HELP = "Help"
     START = "Start"
     CONFIRM_SCREENSHOT = "Confirm Screenshot"
+    CONFIRM_LINK = "Confirm Link"
 
 
 def generate_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str):

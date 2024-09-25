@@ -6,24 +6,8 @@ from bot.handler.utils import BotStates, ScamType
 from bot.extractors import extract_urls
 from bot.extractors import extract_phone_numbers
 from bot.handler.utils import get_inline_cancel_confirm_keyboard
-from bot.extractors import extract_data
+from bot.extractors import extract_platform, SocialMedia
 from bot.messages import ScamHuntMessages as messages
-
-
-async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Handle when user sends a link for a scam."""
-    links = extract_urls(update)
-    links = ", ".join(links)
-    await update.message.reply_text(messages.link_sharing.replace("<link>", links))
-    # Simulate analysis
-    context.user_data["link"] = links
-    data, exception = await extract_data(links)
-    if data:
-        await update.message.reply_text(
-            str(data), reply_markup=get_inline_cancel_confirm_keyboard()
-        )
-    else:
-        await update.message.reply_text(exception + messages.end_message)
 
 
 async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -46,6 +30,17 @@ async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         messages.screenshot_sharing,
         parse_mode="Markdown",
         reply_markup=get_inline_cancel_confirm_keyboard(),
+    )
+
+
+async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle when user sends a link for a scam."""
+    context.user_data["state"] = BotStates.RECEIVE_LINK
+    context.user_data["links"] = extract_urls(update)
+    await update.message.reply_text(
+        messages.link_sharing,
+        reply_markup=get_inline_cancel_confirm_keyboard(),
+        parse_mode="Markdown",
     )
 
 
