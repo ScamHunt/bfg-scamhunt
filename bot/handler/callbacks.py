@@ -140,7 +140,6 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         is_video=result.is_video,
         is_social_media_post=result.is_social_media_post,
         created_by_tg_id=update.effective_user.id,
-        created_at=datetime.now().isoformat(),
         scam_types=[scam_type.dict() for scam_type in result.scam_types],
         links=result.links,
         phone_numbers=result.phone_numbers,
