@@ -63,7 +63,8 @@ class FeedbackMessages:
             ]
         ]
         return FeedbackMessage(
-            text="How likely are you to use this bot again for reporting scams?",
+            text=("How likely are you to use this bot again for reporting scams?\n\n"
+                  "1 Very Unlikely -- 5 Very Likely"),
             keyboard=InlineKeyboardMarkup(buttons),
         )
 
@@ -85,7 +86,7 @@ class FeedbackMessages:
 
     def _create_feature_message(self) -> FeedbackMessage:
         return FeedbackMessage(
-            text="Choose 1: What additional feature would you like to see the most in the bot?",
+            text="Choose 1: What feature would you like to see the most?",
             keyboard=InlineKeyboardMarkup(
                 [
                     [

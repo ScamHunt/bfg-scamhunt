@@ -26,6 +26,7 @@ class CallbackData:
     YES = "yes"
     NO = "no"
     REPORT_SCAM = "report_scam"
+    FEEDBACK = "feedback"
 
 
 class BotStates(Enum):
@@ -62,8 +63,8 @@ def get_inline_cancel_confirm_keyboard():
     return InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Confirm ✅", callback_data=CallbackData.CONFIRM),
-                InlineKeyboardButton("Cancel ❌", callback_data=CallbackData.CANCEL),
+                InlineKeyboardButton("Report as scam ✅", callback_data=CallbackData.CONFIRM),
+                InlineKeyboardButton("Don't report ❌", callback_data=CallbackData.CANCEL),
             ],
         ]
     )
