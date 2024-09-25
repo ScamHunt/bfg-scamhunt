@@ -15,9 +15,10 @@ from bot.handler import commands
 from bot.openai.ocr import ocr_image
 from bot.openai.embeddings import get_embedding
 import logging
-from bot.db import report,embeddings
+from bot.db import report, embeddings
 from datetime import datetime
 from bot.user_metrics import track_user_event, Event
+from bot.feedback import process_feedback, is_feedback
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -25,6 +26,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     track_user_event(update, context)
     if is_onboarding(update.callback_query.data):
         await onboarding(update, context)
+        return
+    if is_feedback(update.callback_query.data):
+        await process_feedback(update, context)
         return
     query = update.callback_query
     await query.answer()
@@ -45,13 +49,17 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                     r, err = report.create_report(context.user_data["report"])
                     track_user_event(update, context, Event.REPORT_CREATED)
                     if err is None and "embedding" in context.user_data and "id" in r:
-                        embeddings.insert_embedding(context.user_data["embedding"], r["id"])
+                        embeddings.insert_embedding(
+                            context.user_data["embedding"], r["id"]
+                        )
                     else:
                         logging.error(f"Report created without embedding or id: {err}")
                     await query.edit_message_text(
                         text=messages.confirm + messages.end_message,
                         parse_mode="Markdown",
                     )
+                    if context.user_data["is_new"]:
+                        await commands.feedback(update, context)
 
 
 async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -62,7 +70,9 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
     image = await context.bot.get_file(context.user_data["photo"].file_id)
     result, exception = await ocr_image(image)
-    embed_result, embed_exception = await get_embedding(f"{result.caption} {result.description}")
+    embed_result, embed_exception = await get_embedding(
+        f"{result.caption} {result.description}"
+    )
     if exception or embed_exception:
         await query.edit_message_text(
             text=messages.error + messages.end_message,
@@ -96,8 +106,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comments=result.comments,
                 shares=result.shares,
             )
-           
-                
+
             text = f"Seems like you shared a suspicious *{result.platform}* post. Do you want to report it?"
             await query.edit_message_text(
                 text=text,

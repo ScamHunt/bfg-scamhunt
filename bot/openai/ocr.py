@@ -23,6 +23,7 @@ class ScamType(BaseModel):
     scam_type: str
     score: int
 
+
 class Platform(Enum):
     FACEBOOK = "facebook"
     INSTAGRAM = "instagram"
