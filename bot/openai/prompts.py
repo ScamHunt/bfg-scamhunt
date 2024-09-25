@@ -41,7 +41,10 @@ Follow these steps to extract the information:
 
 9. Location: Check for any location data in the metadata or mentioned in the post. If none is found, use "null".
 
-10. Social media platform: Determine the platform based on the layout and features visible in the image or mentioned in the metadata. If unidentifiable, use "null".
+10. Social media platform: Determine the platform based on the layout and features visible in the image or mentioned in the metadata. You should return one of this options:
+- facebook
+- instagram
+- unknown
 
 11. Email: Extract the email of the social media account if present. If not found, use "null".
 

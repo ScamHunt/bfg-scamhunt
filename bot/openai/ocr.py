@@ -23,10 +23,15 @@ class ScamType(BaseModel):
     scam_type: str
     score: int
 
+
 class Platform(Enum):
     FACEBOOK = "facebook"
     INSTAGRAM = "instagram"
     UNKNOWN = "unknown"
+    
+    @classmethod
+    def to_list(cls):
+        return [platform.value for platform in cls]
 
 
 class Screenshot(BaseModel):

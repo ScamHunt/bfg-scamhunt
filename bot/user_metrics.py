@@ -7,17 +7,19 @@ import logging
 from dataclasses import dataclass
 
 amplitude_logger = logging.getLogger("amplitude")
-amplitude_logger.setLevel(logging.DEBUG)
+amplitude_logger.setLevel(logging.WARN)
 amplitude = Amplitude(api_key=os.getenv("AMPLITUDE_API_KEY"))
 
 
 @dataclass
-class Event():
+class Event:
     REPORT_CREATED = "Report Created"
     CANCEL = "Cancel"
     LEARN = "Learn"
     HELP = "Help"
     START = "Start"
+    CONFIRM_SCREENSHOT = "Confirm Screenshot"
+
 
 def generate_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str):
     return BaseEvent(
@@ -36,10 +38,15 @@ def generate_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_typ
         platform="telegram",
     )
 
-def track_user_event(update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str = None):
+
+def track_user_event(
+    update: Update, context: ContextTypes.DEFAULT_TYPE, event_type: str = None
+):
     if not event_type:
-        event_type = update.callback_query.data.replace("_", " ").title() if update.callback_query and update.callback_query.data else "Unknown Event"
-    amplitude.track(
-        generate_event(update, context, event_type)
-    )
+        event_type = (
+            update.callback_query.data.replace("_", " ").title()
+            if update.callback_query and update.callback_query.data
+            else "Unknown Event"
+        )
+    amplitude.track(generate_event(update, context, event_type))
     amplitude.flush()
