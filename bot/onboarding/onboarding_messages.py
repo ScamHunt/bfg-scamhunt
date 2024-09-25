@@ -34,7 +34,7 @@ class OnboardingMessages:
     def __init__(self):
         self.messages = {
             OnboardingStates["INTRO"]: OnboardingMessage(
-                text="Have you ever reported suspicious posts or links on Facebook or Instagram before?",
+                text="Have you reported suspicious posts on Facebook or Instagram before?",
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
@@ -108,10 +108,9 @@ class OnboardingMessages:
             OnboardingStates["WHAT_HAPPENS_NEXT"]: OnboardingMessage(
                 text=(
                     "Actually, reporting doesn't guarantee removal. 😕\n\n"
-                    "Platform policies aren't consistent.\n\n"
-                    "⚠️ Suspicious links stay up even after reporting.\n\n"
-                    "🚔 Platforms don't proactively share suspicious links with law enforcement.\n\n"
-                    "This creates a big blind spot and puts Singaporeans at risk. 👀"
+                    "⚠️ Suspicious posts stay up even after reporting.\n\n"
+                    "🚔 Platforms don't proactively share this data with law enforcement.\n\n"
+                    "👀 This creates a big blind spot and puts Singaporeans at risk."
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
@@ -126,10 +125,8 @@ class OnboardingMessages:
             ),
             OnboardingStates["REPORTING_ISSUES"]: OnboardingMessage(
                 text=(
-                    "Scamhunt is taking the first step.\n\n"
-                    "We're creating a database of suspicious social media links reported by users. This gives authorities much-needed visibility.\n\n"
-                    "📊 Data to improve platform policies & takedown processes\n\n"
-                    "👮‍♂️ Informs authorities about evolving threats"
+                    "📈 Scamhunt is building a database of user-reported suspicious posts to create a scam-fighting dashboard.\n\n"
+                    "👮 This data will help authorities hold Social media platforms accountable and shape policies."
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
@@ -144,9 +141,10 @@ class OnboardingMessages:
             ),
             OnboardingStates["SCAMHUNT_SOLUTION"]: OnboardingMessage(
                 text=(
-                    "📸 Report suspicious social media content to Scamhunt bot\n"
-                    "🔗 Send links or screenshots\n"
-                    "✅ Confirm details\n"
+                    "If you spot a suspicious post on Social media\n\n"
+                    "📸 Report it to Scamhunt bot\n\n"
+                    "🔗 Send links or screenshots or both\n\n"
+                    "✅ Confirm details\n\n"
                     "🤖 We'll handle the rest!"
                 ),
                 keyboard=InlineKeyboardMarkup(
@@ -189,39 +187,23 @@ class OnboardingMessages:
                 text=(
                     "Let's say you've found this post on Facebook:\n\n"
                     '"Earn $5000 daily with this secret investment trick! Limited slots available. DM now! 💰💰"\n\n'
-                    "How would you report this?  🤔"
+                    "To report it:\n\n"
+                    "📱 Open your Facebook or Instagram app\n\n"
+                    "🔍 Find a post to share (Pick any for now)\n\n"
+                    "🔗 Send us its link or the screenshot"
                 ),
                 keyboard=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "Share the post link with Scamhunt bot",
-                                callback_data=OnboardingStates["EXAMPLE_SHARE"],
+                                "Open Facebook and share a post",
+                                url="https://www.facebook.com",
                             )
                         ],
                         [
                             InlineKeyboardButton(
-                                "Share a screenshot with Scamhunt bot",
-                                callback_data=OnboardingStates["EXAMPLE_SHARE"],
-                            )
-                        ],
-                    ]
-                ),
-            ),
-            OnboardingStates["EXAMPLE_SHARE"]: OnboardingMessage(
-                text=(
-                    "Try sharing something\n\n"
-                    "📱 Open your Facebook or Instagram app\n"
-                    "🔍 Find a post to share (Pick any for now)\n"
-                    "🔗 Copy the link or take a screenshot\n"
-                    "📤 Send it to the Scamhunt Telegram bot"
-                ),
-                keyboard=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Got it. I’ll share now",
-                                callback_data=OnboardingStates["EXAMPLE_WAITING"],
+                                "Open Instagram and share a post",
+                                url="https://www.instagram.com",
                             )
                         ],
                         [
@@ -230,19 +212,6 @@ class OnboardingMessages:
                                 callback_data=OnboardingStates["END"],
                             )
                         ],
-                    ]
-                ),
-            ),
-            OnboardingStates["EXAMPLE_WAITING"]: OnboardingMessage(
-                text=("Ok! Waiting for you to share..\n\n"),
-                keyboard=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Skip this for now",
-                                callback_data=OnboardingStates["END"],
-                            )
-                        ]
                     ]
                 ),
             ),

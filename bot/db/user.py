@@ -7,20 +7,30 @@ from telegram.ext import ContextTypes
 
 logging.basicConfig(level=logging.INFO)
 
+
 class Feedback:
-    def __init__(self, score: int = None, feature: str = None):
+    def __init__(self, score: int = None, feature: str = None, score_why: str = None):
         self.score = score
+        self.score_why = score_why
         self.feature = feature
 
     def to_dict(self):
         return {
             "score": self.score,
             "feature": self.feature,
+            "score_why": self.score_why,
         }
 
 
 class User:
-    def __init__(self, id: int, username: str, first_name: str, last_name: str, feedback: Feedback = None):
+    def __init__(
+        self,
+        id: int,
+        username: str,
+        first_name: str,
+        last_name: str,
+        feedback: Feedback = None,
+    ):
         self.id = id
         self.username = username
         self.first_name = first_name
@@ -35,7 +45,9 @@ class User:
             first_name=data["first_name"],
             last_name=data["last_name"],
             feedback=Feedback(
-                score=data["score_feedback"], feature=data["feature_feedback"]
+                score=data["score_feedback"],
+                feature=data["feature_feedback"],
+                score_why=data["score_why"],
             ),
         )
 
@@ -47,6 +59,7 @@ class User:
             "last_name": self.last_name,
             "score_feedback": self.feedback.score,
             "feature_feedback": self.feedback.feature,
+            "score_why": self.feedback.score_why,
         }
 
 
@@ -84,7 +97,13 @@ def update_user_feedback(id: int, feedback: Feedback) -> (User, Exception):
     try:
         data = (
             supabase.table("user")
-            .update({"score_feedback": feedback.score, "feature_feedback": feedback.feature})
+            .update(
+                {
+                    "score_feedback": feedback.score,
+                    "feature_feedback": feedback.feature,
+                    "score_why": feedback.score_why,
+                }
+            )
             .eq("id", id)
             .execute()
         )
@@ -92,6 +111,7 @@ def update_user_feedback(id: int, feedback: Feedback) -> (User, Exception):
     except APIError as e:
         logging.error(f"Error updating user feedback: {e}")
         return (None, e)
+
 
 def create_user_if_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"Creating user if not exists for {update.effective_user.id}")

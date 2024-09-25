@@ -7,6 +7,7 @@ from typing import Dict, Union
 
 class FeedbackStates:
     FEEDBACK_SCORE = "feedback_score"
+    FEEDBACK_SCORE_WHY = "feedback_score_why"
     FEEDBACK_ADDITIONAL_FEATURE = "feedback_additional_feature"
     FEEDBACK_END = "feedback_end"
 
@@ -27,31 +28,65 @@ class FeedbackMessages:
             "Status of my reported links",
             "None, it's good as it is",
         ]
+        self.why_options = [
+            "Bot is too complicated to use",
+            "Don't see suspicious posts frequently",
+            "I don't know what happens next",
+            "Not confident in my ability to identify scams",
+            "I forget this bot exists",
+        ]
         self.messages: Dict[str, FeedbackMessage] = {
             FeedbackStates.FEEDBACK_SCORE: self._create_score_message(),
+            FeedbackStates.FEEDBACK_SCORE_WHY: self._create_score_why_message(),
             FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE: self._create_feature_message(),
             FeedbackStates.FEEDBACK_END: self._create_end_message(),
         }
 
     def _create_score_message(self) -> FeedbackMessage:
+        buttons = [
+            [
+                InlineKeyboardButton(
+                    str(i),
+                    callback_data=f"{FeedbackStates.FEEDBACK_SCORE_WHY}:{i}",
+                )
+                for i in range(1, 4)
+            ]
+            + [
+                InlineKeyboardButton(
+                    "4",
+                    callback_data=f"{FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE}:4",
+                ),
+                InlineKeyboardButton(
+                    "5",
+                    callback_data=f"{FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE}:5",
+                ),
+            ]
+        ]
         return FeedbackMessage(
-            text="How likely are you to use this bot again for reporting scams?",
+            text=("How likely are you to use this bot again for reporting scams?\n\n"
+                  "1 Very Unlikely -- 5 Very Likely"),
+            keyboard=InlineKeyboardMarkup(buttons),
+        )
+
+    def _create_score_why_message(self) -> FeedbackMessage:
+        return FeedbackMessage(
+            text="Could you tell us why you chose that score?",
             keyboard=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            str(i),
-                            callback_data=f"{FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE}:{i}",
+                            option,
+                            callback_data=f"{FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE}:{i+1}",
                         )
-                        for i in range(1, 6)
                     ]
+                    for i, option in enumerate(self.why_options)
                 ]
             ),
         )
 
     def _create_feature_message(self) -> FeedbackMessage:
         return FeedbackMessage(
-            text="Choose 1: What additional feature would you like to see the most in the bot?",
+            text="Choose 1: What feature would you like to see the most?",
             keyboard=InlineKeyboardMarkup(
                 [
                     [
@@ -105,8 +140,14 @@ class FeedbackMessages:
         state = parts[0]
         if state == FeedbackStates.FEEDBACK_SCORE:
             return state
-        elif state == FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE:
+        elif state == FeedbackStates.FEEDBACK_SCORE_WHY:
             context.user_data["score"] = int(parts[1])
+            return state
+        elif state == FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE:
+            if "score" not in context.user_data:
+                context.user_data["score"] = int(parts[1])
+            if "score_why" not in context.user_data:
+                context.user_data["score_why"] = self.why_options[int(parts[1]) - 1]
             return state
         elif state == FeedbackStates.FEEDBACK_END:
             context.user_data["feature"] = self.feature_options[int(parts[1]) - 1]
@@ -123,8 +164,13 @@ async def process_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     state = feedback_messages.get_state(query.data, context)
     if state == FeedbackStates.FEEDBACK_END:
+        score_why = None
+        if "score_why" in context.user_data:
+            score_why = context.user_data["score_why"]
         user_feedback = Feedback(
-            score=context.user_data["score"], feature=context.user_data["feature"]
+            score=context.user_data["score"],
+            feature=context.user_data["feature"],
+            score_why=score_why,
         )
         update_user_feedback(update.effective_user.id, user_feedback)
         context.user_data["is_new"] = False
@@ -135,6 +181,7 @@ async def process_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def is_feedback(data: str) -> bool:
     return (
         data.startswith(FeedbackStates.FEEDBACK_SCORE)
+        or data.startswith(FeedbackStates.FEEDBACK_SCORE_WHY)
         or data.startswith(FeedbackStates.FEEDBACK_ADDITIONAL_FEATURE)
         or data.startswith(FeedbackStates.FEEDBACK_END)
     )

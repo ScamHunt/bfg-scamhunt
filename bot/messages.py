@@ -10,12 +10,8 @@ class ScamHuntMessages:
 
     new_scam_report: str = (
         "🙌 Hello hunter!\n\n"
-        "🔗 Got a suspicious Facebook or Insta link? \n"
-        "Just share directly or copy, paste and send it in chat\n\n"
-        "🖼 Got a screenshot of the post? \n"
-        "Look for the image in your photos and drop it in chat\n\n"
-        "Got both? \n"
-        "You can share both!"
+        "🖼 Send us its link or screenshot of the suspicious post\n\n"
+        "👯‍ Feel free to share both!"
     )
 
     link_sharing: str = (
@@ -29,8 +25,7 @@ class ScamHuntMessages:
     )
 
     screenshot_sharing: str = (
-        "🖼️ Thanks for sharing a *suspicious screenshot!*\n\n"
-        "Could you confirm if this is the screenshot of the suspicious post you're reporting?"
+        "Ready to report this post as a potential scam?"
     )
 
     looking_into_scam: str = "🔍 I'm looking into this. Please wait a moment... \n\n"
@@ -42,7 +37,7 @@ class ScamHuntMessages:
     )
 
     error: str = (
-        "🚫 *Error!* Please try again. If the problem persists, contact @scamhunt"
+        "🚫 Error! Please try again."
     )
 
     scam_type: str = (
@@ -52,7 +47,12 @@ class ScamHuntMessages:
 
     cancel: str = "🚫 *Cancelled!* If you need help, use /help or /start"
 
-    confirm: str = "🎉 *Confirmed!* Thanks for keeping Singapore safe from scams! 🙌"
+    confirm: str = (
+        "🎉 Great job, hunter! \n\n"
+        "Your report has been received. It will be analyzed and added to the database.\n\n"
+        "Remember,\n"
+        "🕵️‍♂️ If you spot a suspicious post, don’t just ignore it — report it!"
+    )
 
     end_message: str = (
         "\n\nFeel free to report more scams with /report or /hunt. Let's keep going! 💪"

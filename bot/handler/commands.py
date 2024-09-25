@@ -12,6 +12,7 @@ from bot.user_metrics import track_user_event, Event
 from bot.feedback import feedback_messages, FeedbackStates
 import logging
 
+
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle scam reporting process."""
     markup = InlineKeyboardMarkup(
@@ -67,4 +68,6 @@ async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message:
         await update.message.reply_text(message.text, reply_markup=message.keyboard)
     else:
-        await update.callback_query.message.edit_text(message.text, reply_markup=message.keyboard)
+        await update.callback_query.message.edit_text(
+            message.text, reply_markup=message.keyboard
+        )
