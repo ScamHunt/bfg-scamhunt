@@ -10,7 +10,7 @@ class ScamHuntMessages:
 
     new_scam_report: str = (
         "🙌 Hello hunter!\n\n"
-        "🖼 Send us its link or screenshot of the suspicious post\n\n"
+        "🖼 Send us the link or screenshot of the suspicious post\n\n"
         "👯‍ Feel free to share both!"
     )
 
