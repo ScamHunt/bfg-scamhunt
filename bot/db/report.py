@@ -34,6 +34,7 @@ class Report:
         caption: Optional[str] = None,
         location: Optional[str] = None,
         report_url: Optional[str] = None,
+        correctness: Optional[str] = None,
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
@@ -58,7 +59,7 @@ class Report:
         self.likes = likes
         self.comments = comments
         self.shares = shares
-
+        self.correctness = correctness
     @classmethod
     def from_dict(cls, data: dict):
         return cls(**data)
