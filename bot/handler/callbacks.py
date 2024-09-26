@@ -106,6 +106,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         confirmation_message = (
             "🎉 *Great job, hunter!*\n"
             "Thank you for hunting this down.\n\n"
+            "🚨 This is very likely a scam.\n\n"
             "Remember,\n"
             "🕵️ If you spot a suspicious post, don’t just ignore it — report it!\n"
             "Let's keep going! 💪"
@@ -121,6 +122,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         confirmation_message = (
             "🎉 *Great job, hunter!*\n"
             "False alarm, but great instincts!\n\n"
+            "🔶 This is not likely a scam.\n\n"
             "Remember,\n"
             "🕵️ Always better to check than to ignore potential threats.\n\n"
             "Let's keep going! 💪"
