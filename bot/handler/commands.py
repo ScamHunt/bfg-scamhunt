@@ -10,9 +10,10 @@ from bot.db.user import create_user_if_not_exists
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bot.user_metrics import track_user_event, Event
 from bot.feedback import feedback_messages, FeedbackStates
-import logging
+from bot.db.user import is_banned
 
 
+@is_banned
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle scam reporting process."""
     markup = InlineKeyboardMarkup(
@@ -41,18 +42,21 @@ async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
 
 
+@is_banned
 async def learn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /learn command."""
     track_user_event(update, context, Event.LEARN)
     await update.message.reply_text(messages.learn, parse_mode="Markdown")
 
 
+@is_banned
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle /help command."""
     track_user_event(update, context, Event.HELP)
     await update.message.reply_text(messages.help)
 
 
+@is_banned
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     track_user_event(update, context, Event.START)
     state = next(iter(OnboardingStates))

@@ -29,6 +29,7 @@ class CallbackData:
     FEEDBACK = "feedback"
     UNSURE = "unsure"
 
+
 class BotStates(Enum):
     START = auto()
     RECEIVE_SCREENSHOT = auto()
@@ -72,6 +73,7 @@ def get_inline_cancel_confirm_keyboard():
             ],
         ]
     )
+
 
 def get_inline_keyboard_for_scam_result():
     return InlineKeyboardMarkup(

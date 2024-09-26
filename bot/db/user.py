@@ -4,6 +4,7 @@ import logging
 from .report import Report
 from telegram import Update
 from telegram.ext import ContextTypes
+from functools import wraps
 
 logging.basicConfig(level=logging.INFO)
 
@@ -128,3 +129,36 @@ def create_user_if_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE
         logging.info(f"New user: {user}")
     else:
         context.user_data["is_new"] = False
+
+
+def get_banned_users() -> (list[int], Exception):
+    try:
+        data = supabase.table("user").select("id").eq("is_banned", True).execute()
+        return ([user["id"] for user in data.data], None)
+    except APIError as e:
+        logging.error(f"Error getting banned users: {e}")
+        return (None, e)
+
+
+def is_banned(func):
+    @wraps(func)
+    async def wrapper(update, context):
+        userid = (
+            update.message.from_user.id
+            if update.message
+            else update.callback_query.from_user.id
+        )
+        banned_users, _ = get_banned_users()
+        if not userid in banned_users:
+            await func(update, context)
+        else:
+            response = (
+                "`💀 Account suspended\n"
+                "We take the safety and integrity of our community seriously.`"
+            )
+            if update.message:
+                await update.message.reply_text(response, parse_mode="Markdown")
+            elif update.callback_query:
+                await update.callback_query.answer(response, show_alert=True)
+
+    return wrapper

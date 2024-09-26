@@ -8,8 +8,10 @@ from bot.extractors import extract_phone_numbers
 from bot.handler.utils import get_inline_cancel_confirm_keyboard
 from bot.extractors import extract_platform, SocialMedia
 from bot.messages import ScamHuntMessages as messages
+from bot.db.user import is_banned
 
 
+@is_banned
 async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a phone number for a scam."""
     phone_numbers = extract_phone_numbers(update)
@@ -22,6 +24,7 @@ async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     )
 
 
+@is_banned
 async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a screenshot for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_SCREENSHOT
@@ -33,6 +36,7 @@ async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     )
 
 
+@is_banned
 async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a link for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_LINK
@@ -44,6 +48,7 @@ async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     )
 
 
+@is_banned
 async def text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle text messages."""
     await update.message.reply_text(messages.text_sharing)

@@ -25,8 +25,7 @@ class ScamHuntMessages:
     screenshot_sharing: str = "Ready to report this post as a potential scam?"
 
     looking_into_scam: str = (
-        "🕵️ I’m looking into it...\n\n"
-        "Please wait, this may take a few moments."
+        "🕵️ I’m looking into it...\n\n" "Please wait, this may take a few moments."
     )
 
     help: str = (
