@@ -34,6 +34,7 @@ class Report:
         caption: Optional[str] = None,
         location: Optional[str] = None,
         report_url: Optional[str] = None,
+        correctness: Optional[str] = None,
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
@@ -58,7 +59,7 @@ class Report:
         self.likes = likes
         self.comments = comments
         self.shares = shares
-
+        self.correctness = correctness
     @classmethod
     def from_dict(cls, data: dict):
         return cls(**data)
@@ -117,3 +118,11 @@ def get_reports_by_user(user_id: int) -> (list[Report], Exception):
     except TypeError as e:
         logging.error(f"Error getting reports by user: {e}")
         return (None, e)
+
+def update_report_correctness(report_id: int, correctness: str):
+    try:
+        supabase.table("report").update({"correctness": correctness}).eq("id", report_id).execute()
+    except APIError as e:
+        logging.error(f"Error updating report correctness: {e}")
+        return (None, e)
+

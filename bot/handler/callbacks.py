@@ -7,11 +7,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bot.handler.utils import (
     BotStates,
     CallbackData,
-    get_inline_cancel_confirm_keyboard,
 )
 
-import time
-from bot.handler.receiver import extract_urls, extract_platform
+from bot.handler.receiver import extract_platform
 from bot.onboarding.onboarding import is_onboarding, onboarding
 from bot.handler import commands
 
@@ -19,12 +17,12 @@ from bot.openai.ocr import ocr_image, Platform
 from bot.openai.embeddings import get_embedding
 import logging
 from bot.db import report, embeddings
-from datetime import datetime
 from bot.user_metrics import track_user_event, Event
 from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
 from bot.handler.utils import get_inline_keyboard_for_scam_result
+from bot.db.report import update_report_correctness
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
@@ -105,6 +103,13 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 f"*Reasoning:*\n{result.reasoning}\n\n"
                 "Did we get it right?"
             )
+        confirmation_message = (
+            "🎉 *Great job, hunter!*\n"
+            "Thank you for hunting this down.\n\n"
+            "Remember,\n"
+            "🕵️ If you spot a suspicious post, don’t just ignore it — report it!\n"
+            "Let's keep going! 💪"
+        )
     else:
         text=(
                 "🔶 Not very likely a scam\n"
@@ -113,7 +118,14 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 f"*Reasoning:*\n{result.reasoning}\n\n"
                 "Did we get it right?"
             )
-        
+        confirmation_message = (
+            "🎉 *Great job, hunter!*\n"
+            "False alarm, but great instincts!\n\n"
+            "Remember,\n"
+            "🕵️ Always better to check than to ignore potential threats.\n\n"
+            "Let's keep going! 💪"
+        )
+    context.user_data["confirmation_message"] = confirmation_message
     await message.edit_text(
         text=text,
         parse_mode="Markdown",
@@ -146,6 +158,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     create_user_if_not_exists(update, context)
     r, err = report.create_report(r)
+    context.user_data["report_id"] = r["id"]
     track_user_event(update, context, Event.REPORT_CREATED)
 
     embed_result, embed_exception = await get_embedding(
@@ -162,9 +175,9 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         logging.error(f"Report created without embedding or id: {err}")
 
 
-async def send_confirmation_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def send_confirmation_message(update: Update, context: ContextTypes.DEFAULT_TYPE, confirmation_message: str = messages.confirm):
     await update.callback_query.edit_message_text(
-        text=messages.confirm,
+        text=confirmation_message,
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(
             [
@@ -198,5 +211,13 @@ async def send_confirmation_message(update: Update, context: ContextTypes.DEFAUL
 
 async def scam_result_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.callback_query.data in [CallbackData.YES, CallbackData.NO, CallbackData.UNSURE]:
-        # TODO: Add to report in db
-        await send_confirmation_message(update, context)
+        report_id = context.user_data.get("report_id")
+        if report_id:
+            correctness = update.callback_query.data
+            try:
+                update_report_correctness(report_id, correctness)
+            except Exception as e:
+                logging.error(f"Error updating report correctness: {e}")
+        
+        confirmation_message = context.user_data["confirmation_message"]
+        await send_confirmation_message(update, context, confirmation_message)
