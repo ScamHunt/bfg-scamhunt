@@ -155,8 +155,7 @@ def is_banned(func):
         else:
             response = (
                 "`💀 Account suspended\n"
-                "We take the safety and integrity of our community seriously.\n\n"
-                "Thank you for your understanding.`"
+                "We take the safety and integrity of our community seriously.`"
             )
             if update.message:
                 await update.message.reply_text(response, parse_mode="Markdown")
