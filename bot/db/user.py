@@ -153,7 +153,11 @@ def is_banned(func):
         if not userid in banned_users:
             await func(update, context)
         else:
-            response = f"Not authorized"
+            response = (
+                "`💀 Account suspended\n"
+                "We take the safety and integrity of our community seriously.\n\n"
+                "Thank you for your understanding.`"
+            )
             if update.message:
                 await update.message.reply_text(response, parse_mode="Markdown")
             elif update.callback_query:
