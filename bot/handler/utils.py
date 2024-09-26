@@ -40,7 +40,10 @@ class BotStates(Enum):
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle errors."""
-    logging.error(f"Error occurred: {context.error}", exc_info=context.error)
+    error_location = f"{__file__}:{error.__code__.co_firstlineno}"
+    logging.error(
+        f"Error occurred in {error_location}: {context.error}", exc_info=context.error
+    )
     logging.error(f"Update that caused the error: {update}")
 
     if update.effective_user:
