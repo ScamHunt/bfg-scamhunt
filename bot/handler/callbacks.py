@@ -23,7 +23,10 @@ from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
 from bot.handler.utils import get_inline_keyboard_for_scam_result
 from bot.db.report import update_report_correctness
+from bot.db.user import is_banned
 
+
+@is_banned
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the callback query from the inline keyboard."""
     track_user_event(update, context)
@@ -93,16 +96,16 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
             parse_mode="Markdown",
         )
         return
-    
+
     chat_id = update.effective_chat.id
     if result.scam_likelihood > 80:
-        text=(
-                "🚨 Very likely a scam\n"
-                "Exercise extreme caution and avoid engaging further.\n\n"
-                "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
-                f"*Reasoning:*\n{result.reasoning}\n\n"
-                "Did we get it right?"
-            )
+        text = (
+            "🚨 Very likely a scam\n"
+            "Exercise extreme caution and avoid engaging further.\n\n"
+            "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
+            f"*Reasoning:*\n{result.reasoning}\n\n"
+            "Did we get it right?"
+        )
         confirmation_message = (
             "🎉 *Great job, hunter!*\n"
             "Thank you for hunting this down.\n\n"
@@ -112,13 +115,13 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
             "Let's keep going! 💪"
         )
     else:
-        text=(
-                "🔶 Not very likely a scam\n"
-                "However, please remain cautious and use your best judgment.\n\n"
-                "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
-                f"*Reasoning:*\n{result.reasoning}\n\n"
-                "Did we get it right?"
-            )
+        text = (
+            "🔶 Not very likely a scam\n"
+            "However, please remain cautious and use your best judgment.\n\n"
+            "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
+            f"*Reasoning:*\n{result.reasoning}\n\n"
+            "Did we get it right?"
+        )
         confirmation_message = (
             "🎉 *Great job, hunter!*\n"
             "False alarm, but great instincts!\n\n"
@@ -177,7 +180,11 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         logging.error(f"Report created without embedding or id: {err}")
 
 
-async def send_confirmation_message(update: Update, context: ContextTypes.DEFAULT_TYPE, confirmation_message: str = messages.confirm):
+async def send_confirmation_message(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    confirmation_message: str = messages.confirm,
+):
     await update.callback_query.edit_message_text(
         text=confirmation_message,
         parse_mode="Markdown",
@@ -212,7 +219,11 @@ async def send_confirmation_message(update: Update, context: ContextTypes.DEFAUL
 
 
 async def scam_result_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.callback_query.data in [CallbackData.YES, CallbackData.NO, CallbackData.UNSURE]:
+    if update.callback_query.data in [
+        CallbackData.YES,
+        CallbackData.NO,
+        CallbackData.UNSURE,
+    ]:
         report_id = context.user_data.get("report_id")
         if report_id:
             correctness = update.callback_query.data
@@ -220,6 +231,6 @@ async def scam_result_feedback(update: Update, context: ContextTypes.DEFAULT_TYP
                 update_report_correctness(report_id, correctness)
             except Exception as e:
                 logging.error(f"Error updating report correctness: {e}")
-        
+
         confirmation_message = context.user_data["confirmation_message"]
         await send_confirmation_message(update, context, confirmation_message)
