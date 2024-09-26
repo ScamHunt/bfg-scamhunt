@@ -100,7 +100,7 @@ async def ocr_image(file) -> (Screenshot, Exception):
                     ],
                 }
             ],
-            timeout=20,
+            timeout=30,
             response_format=Screenshot,
         )
         out = response.choices[0].message.parsed
