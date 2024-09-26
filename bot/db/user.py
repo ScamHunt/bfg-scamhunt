@@ -134,7 +134,6 @@ def create_user_if_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE
 def get_banned_users() -> (list[int], Exception):
     try:
         data = supabase.table("user").select("id").eq("is_banned", True).execute()
-        logging.info(f"Banned users: {[user["id"] for user in data.data]}")
         return ([user["id"] for user in data.data], None)
     except APIError as e:
         logging.error(f"Error getting banned users: {e}")

@@ -151,7 +151,7 @@ class OnboardingMessages:
                     [
                         [
                             InlineKeyboardButton(
-                                "Try with an example",
+                                "Show me an example",
                                 callback_data=OnboardingStates["EXAMPLE_START"],
                             )
                         ],
