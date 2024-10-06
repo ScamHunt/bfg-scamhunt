@@ -6,7 +6,6 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from functools import wraps
 
-logging.basicConfig(level=logging.INFO)
 
 
 class Feedback:

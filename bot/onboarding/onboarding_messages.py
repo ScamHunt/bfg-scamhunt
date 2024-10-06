@@ -12,7 +12,6 @@ OnboardingStates = {
     "HOW_TO_HELP": "onboarding_how_to_help",
     "END": "onboarding_end",
     "EXAMPLE_START": "example_start",
-    "EXAMPLE_SHARE": "example_share",
     "EXAMPLE_WAITING": "example_waiting",
 }
 

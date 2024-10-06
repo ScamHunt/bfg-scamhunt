@@ -9,24 +9,30 @@ from telegram.ext import (
 
 from dotenv import load_dotenv
 import os
-import logging
 
 import bot.handler.callbacks as callbacks
 import bot.handler.commands as commands
 import bot.handler.receiver as receiver
 import bot.handler.utils as utils
+import sentry_sdk
 
 
 load_dotenv(override=True)
 
 if os.getenv("ENV") == "local":
     bot_token = os.getenv("TELEGRAM_STG_BOT_TOKEN")
+    environement = 'staging'
 else:
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    environement = 'production'
 
-# set higher logging level for httpx to avoid all GET and POST requests being logged
-logging.getLogger("httpx").setLevel(logging.WARNING)
 
+
+sentry_sdk.init(
+        dsn=os.getenv("SENTRY_DSN"),
+        traces_sample_rate=0.85,
+        environment=environement,
+    )
 
 def main():
     """Start the bot."""
