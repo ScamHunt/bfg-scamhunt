@@ -19,7 +19,6 @@ async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     phone_numbers = ", ".join(phone_numbers)
     await update.message.reply_text(
         messages.phone_number_sharing.replace("<phone_number>", phone_numbers),
-        reply_markup=get_inline_cancel_confirm_keyboard(),
         parse_mode="Markdown",
     )
 

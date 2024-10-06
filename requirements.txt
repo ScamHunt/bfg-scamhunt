@@ -108,6 +108,7 @@ referencing==0.35.1
 requests==2.32.3
 requests-toolbelt==1.0.0
 rpds-py==0.20.0
+sentry-sdk==2.15.0
 setuptools==75.1.0
 shellingham==1.5.4
 six==1.16.0
