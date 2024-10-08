@@ -38,11 +38,16 @@ class BotStates(Enum):
     RECEIVE_TEXT = auto()
 
 
-async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle errors."""
     logging.error(f"Error occurred: {context.error}", exc_info=context.error)
     logging.error(f"Update that caused the error: {update}")
 
+    # Handle the case where update is NoneType
+    if not update:
+        await context.bot.send_message(chat_id=context._chat_id, text=messages.error)
+        return
+    
     if update.effective_user:
         user_info = f"User ID: {update.effective_user.id}, Username: {update.effective_user.username}"
         logging.error(f"User information: {user_info}")
