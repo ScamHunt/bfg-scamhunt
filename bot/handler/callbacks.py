@@ -21,6 +21,7 @@ from bot.user_metrics import track_user_event, Event
 from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
+from bot.db.image_hash import create_image_hash, image_exists
 from bot.handler.utils import get_inline_keyboard_for_scam_result
 from bot.db.report import update_report_correctness
 from bot.db.user import is_banned
@@ -84,6 +85,14 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
 
     image = await context.bot.get_file(context.user_data["photo"].file_id)
+
+    if await image_exists(image, update.effective_user.id):
+        await query.edit_message_text(
+            text="Oops! 🙈 It looks like this screenshoot was already uploaded.\n\nPlease try again with a different screenshot.",
+            parse_mode="Markdown",
+        )
+        return
+    
     result, exception = await ocr_image(image)
     context.user_data["state"] = BotStates.START
 
@@ -175,6 +184,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     if err is None and "id" in r:
         embeddings.insert_embedding(embed_result.embedding, r["id"])
+        await create_image_hash(image, report_id=r["id"], user_id=update.effective_user.id,)
         await upload_img_to_supabase(image, update.effective_user.id, r["id"])
     else:
         logging.error(f"Report created without embedding or id: {err}")
