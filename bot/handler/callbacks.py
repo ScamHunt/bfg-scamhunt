@@ -21,7 +21,7 @@ from bot.user_metrics import track_user_event, Event
 from bot.feedback import process_feedback, is_feedback
 from bot.db.user import create_user_if_not_exists
 from bot.db.storage import upload_img_to_supabase
-from bot.db.image_hash import create_image_hash, image_exists
+from bot.db.image_hash import create_image_hash, get_image_report
 from bot.handler.utils import get_inline_keyboard_for_scam_result
 from bot.db.report import update_report_correctness
 from bot.db.user import is_banned
@@ -59,7 +59,6 @@ async def confirm_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     track_user_event(update, context, Event.CONFIRM_LINK)
     links = context.user_data["links"]
     platform = extract_platform(links[0])
-    context.user_data["state"] = BotStates.START
     context.user_data["report"] = report.Report(
         platform=platform.value,
         report_url=links[0],
@@ -83,62 +82,41 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     message = await query.edit_message_text(
         text=messages.looking_into_scam, parse_mode="Markdown"
     )
-
+    # Download file
     image = await context.bot.get_file(context.user_data["photo"].file_id)
+    # Attempt to get the report associated with the image
+    result = await get_image_report(image)
+    is_duplicate = True if result else False
+    if not result:
+        # If no report is found, attempt OCR
+        result, exception = await ocr_image(image)
+        result.scam_types = [scam_type.dict() for scam_type in result.scam_types]
+        if not result.is_screenshot or result.platform == Platform.UNKNOWN:
+            logging.error(
+                f"Invalid platform: {result.platform}, Is screenshot: {result.is_screenshot}"
+            )
+            await query.edit_message_text(
+                text="Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again.",
+                parse_mode="Markdown",
+            )
+            return
 
-    if await image_exists(image, update.effective_user.id):
-        await query.edit_message_text(
-            text="Oops! 🙈 It looks like this screenshoot was already uploaded.\n\nPlease try again with a different screenshot.",
-            parse_mode="Markdown",
-        )
-        return
-    
-    result, exception = await ocr_image(image)
-    context.user_data["state"] = BotStates.START
-
-    if not result.is_screenshot or result.platform == Platform.UNKNOWN:
-        logging.error(
-            f"Invalid platform: {result.platform}, Is screenshot: {result.is_screenshot}"
-        )
-        await query.edit_message_text(
-            text="Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again.",
-            parse_mode="Markdown",
-        )
-        return
-
-    chat_id = update.effective_chat.id
-    if result.scam_likelihood > 80:
-        text = (
-            "🚨 Very likely a scam\n"
-            "Exercise extreme caution and avoid engaging further.\n\n"
-            "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
-            f"*Reasoning:*\n{result.reasoning}\n\n"
-            "Did we get it right?"
-        )
-        confirmation_message = (
-            "🎉 *Great job, hunter!*\n"
-            "Thank you for hunting this down.\n\n"
-            "🚨 This is very likely a scam.\n\n"
-            "Remember,\n"
-            "🕵️ If you spot a suspicious post, don’t just ignore it — report it!\n"
-            "Let's keep going! 💪"
-        )
-    else:
-        text = (
-            "🔶 Not very likely a scam\n"
-            "However, please remain cautious and use your best judgment.\n\n"
-            "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
-            f"*Reasoning:*\n{result.reasoning}\n\n"
-            "Did we get it right?"
-        )
-        confirmation_message = (
-            "🎉 *Great job, hunter!*\n"
-            "False alarm, but great instincts!\n\n"
-            "🔶 This is not likely a scam.\n\n"
-            "Remember,\n"
-            "🕵️ Always better to check than to ignore potential threats.\n\n"
-            "Let's keep going! 💪"
-        )
+    scam_likelihood = result.scam_likelihood
+    text = (
+        f"{'🚨 Very likely a scam' if scam_likelihood > 80 else '🔶 Not very likely a scam'}\n"
+        f"{'Exercise extreme caution and avoid engaging further.' if scam_likelihood > 80 else 'However, please remain cautious and use your best judgment.'}\n\n"
+        "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
+        f"*Reasoning:*\n{result.reasoning}\n\n"
+        "Did we get it right?"
+    )
+    confirmation_message = (
+        "🎉 *Great job, hunter!*\n"
+        f"{'Thank you for hunting this down.\n\n' if scam_likelihood > 80 else 'False alarm, but great instincts!\n\n'}"
+        f"{'🚨 This is very likely a scam.' if scam_likelihood > 80 else '🔶 This is not likely a scam.'}\n\n"
+        "Remember,\n"
+        "🕵️ If you spot a suspicious post, don’t just ignore it — report it!\n"
+        "Let's keep going! 💪"
+    )
     context.user_data["confirmation_message"] = confirmation_message
     await message.edit_text(
         text=text,
@@ -161,7 +139,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         is_video=result.is_video,
         is_social_media_post=result.is_social_media_post,
         created_by_tg_id=update.effective_user.id,
-        scam_types=[scam_type.dict() for scam_type in result.scam_types],
+        scam_types=result.scam_types,
         links=result.links,
         phone_numbers=result.phone_numbers,
         emails=result.emails,
@@ -170,24 +148,23 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         shares=result.shares,
     )
 
-    create_user_if_not_exists(update, context)
-    r, err = report.create_report(r)
-    context.user_data["report_id"] = r["id"]
-    track_user_event(update, context, Event.REPORT_CREATED)
+    try:
+        create_user_if_not_exists(update, context)
+        r = report.create_report(r)
+        track_user_event(update, context, Event.REPORT_CREATED)
 
-    embed_result, embed_exception = await get_embedding(
-        f"{result.caption} {result.description}"
-    )
-    if exception or embed_exception:
+        if not is_duplicate:
+            embed_result = await get_embedding(f"{result.caption} {result.description}")
+            embeddings.insert_embedding(embed_result.embedding, r.id)
+            await create_image_hash(
+                image, report_id=r.id, user_id=update.effective_user.id
+            )
+            await upload_img_to_supabase(image, update.effective_user.id, r.id)
+
+    except Exception as err:
+        logging.error(f"Report created without embedding or id: {err}")
         await query.edit_message_text(text=messages.error, parse_mode="Markdown")
         return
-
-    if err is None and "id" in r:
-        embeddings.insert_embedding(embed_result.embedding, r["id"])
-        await create_image_hash(image, report_id=r["id"], user_id=update.effective_user.id,)
-        await upload_img_to_supabase(image, update.effective_user.id, r["id"])
-    else:
-        logging.error(f"Report created without embedding or id: {err}")
 
 
 async def send_confirmation_message(

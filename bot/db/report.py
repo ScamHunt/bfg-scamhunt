@@ -3,6 +3,7 @@ from postgrest import APIError
 import logging
 from datetime import datetime
 from typing import Optional
+from datetime import datetime
 from ..openai.ocr import ScamType, Screenshot, Platform
 
 
@@ -35,6 +36,7 @@ class Report:
         location: Optional[str] = None,
         report_url: Optional[str] = None,
         correctness: Optional[str] = None,
+        created_at: Optional[datetime] = None,
     ):
         self.id = id  # Let the database handle auto-increment
         self.platform = platform
@@ -60,6 +62,7 @@ class Report:
         self.comments = comments
         self.shares = shares
         self.correctness = correctness
+        self.created_at = created_at
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -72,18 +75,18 @@ class Report:
             setattr(self, key, value)
 
 
-def create_report(report: Report) -> (Report, Exception):
+def create_report(report: Report) -> Report:
     new = report.__dict__
     del new["id"]
+    del new["created_at"]
     try:
         data = supabase.table("report").insert(new).execute()
-        return (data.data[0], None)
+        return Report.from_dict(data.data[0])
     except APIError as e:
         logging.error(f"Error creating report: {e}")
-        return (None, e)
 
 
-def get_report(report_id: int) -> (Report, Exception):
+def get_report(report_id: int) -> Report:
     try:
         data = (
             supabase.table("report")
@@ -93,16 +96,14 @@ def get_report(report_id: int) -> (Report, Exception):
             .single()
             .execute()
         )
-        return (Report.from_dict(data.data), None)
+        return Report.from_dict(data.data)
     except APIError as e:
         logging.error(f"Error getting report: {e}")
-        return (None, e)
     except TypeError as e:
         logging.error(f"Error getting report: {e}")
-        return (None, e)
 
 
-def get_reports_by_user(user_id: int) -> (list[Report], Exception):
+def get_reports_by_user(user_id: int) -> list[Report]:
     try:
         data = (
             supabase.table("report")
@@ -112,13 +113,11 @@ def get_reports_by_user(user_id: int) -> (list[Report], Exception):
             .execute()
         )
         reports = [Report.from_dict(report) for report in data.data]
-        return (reports, None)
+        return reports
     except APIError as e:
         logging.error(f"Error getting reports by user: {e}")
-        return (None, e)
     except TypeError as e:
         logging.error(f"Error getting reports by user: {e}")
-        return (None, e)
 
 
 def update_report_correctness(report_id: int, correctness: str):
@@ -128,4 +127,3 @@ def update_report_correctness(report_id: int, correctness: str):
         ).execute()
     except APIError as e:
         logging.error(f"Error updating report correctness: {e}")
-        return (None, e)

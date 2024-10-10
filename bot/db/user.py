@@ -7,7 +7,6 @@ from telegram.ext import ContextTypes
 from functools import wraps
 
 
-
 class Feedback:
     def __init__(self, score: int = None, feature: str = None, score_why: str = None):
         self.score = score
