@@ -114,7 +114,7 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"{'Thank you for hunting this down.\n\n' if scam_likelihood > 80 else 'False alarm, but great instincts!\n\n'}"
         f"{'🚨 This is very likely a scam.' if scam_likelihood > 80 else '🔶 This is not likely a scam.'}\n\n"
         "Remember,\n"
-        "🕵️ If you spot a suspicious post, don’t just ignore it — report it!\n"
+        "🕵️ If you spot a suspicious post, don't just ignore it — report it!\n"
         "Let's keep going! 💪"
     )
     context.user_data["confirmation_message"] = confirmation_message
