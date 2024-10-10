@@ -12,14 +12,6 @@ from bot.messages import ScamHuntMessages as messages
 
 # Initialize the ScamHuntMessages class
 
-
-class ScamType(Enum):
-    PHONE_NUMBER = auto()
-    SCREENSHOT = auto()
-    LINK = auto()
-    TEXT = auto()
-
-
 class CallbackData:
     CANCEL = "cancel"
     CONFIRM = "confirm"
@@ -47,7 +39,7 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update:
         await context.bot.send_message(chat_id=context._chat_id, text=messages.error)
         return
-    
+
     if update.effective_user:
         user_info = f"User ID: {update.effective_user.id}, Username: {update.effective_user.username}"
         logging.error(f"User information: {user_info}")

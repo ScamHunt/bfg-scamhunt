@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.messages import ScamHuntMessages as messages
-from bot.handler.utils import BotStates, ScamType
+from bot.handler.utils import BotStates
 from bot.extractors import extract_urls
 from bot.extractors import extract_phone_numbers
 from bot.handler.utils import get_inline_cancel_confirm_keyboard
@@ -15,7 +15,6 @@ from bot.db.user import is_banned
 async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a phone number for a scam."""
     phone_numbers = extract_phone_numbers(update)
-    context.user_data["scam_type"] = ScamType.PHONE_NUMBER
     phone_numbers = ", ".join(phone_numbers)
     await update.message.reply_text(
         messages.phone_number_sharing.replace("<phone_number>", phone_numbers),

@@ -154,18 +154,17 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         track_user_event(update, context, Event.REPORT_CREATED)
 
         if not is_duplicate:
-            embed_result = await get_embedding(
-                f"{result.caption} {result.description}"
-            )
+            embed_result = await get_embedding(f"{result.caption} {result.description}")
             embeddings.insert_embedding(embed_result.embedding, r.id)
-            await create_image_hash(image, report_id=r.id, user_id=update.effective_user.id)
+            await create_image_hash(
+                image, report_id=r.id, user_id=update.effective_user.id
+            )
             await upload_img_to_supabase(image, update.effective_user.id, r.id)
 
     except Exception as err:
         logging.error(f"Report created without embedding or id: {err}")
         await query.edit_message_text(text=messages.error, parse_mode="Markdown")
         return
-    
 
 
 async def send_confirmation_message(
