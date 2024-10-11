@@ -59,6 +59,10 @@ class ScamHuntMessages:
         "Visit https://t.me/ncpcscamalert for regular updates about scams in Singapore and different scam types.\n\n"
         "Stay informed to stay safe! 🛡️"
     )
+    
+    not_a_screenshot_message: str = (
+        "Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again."
+    )
 
     def get_screenshot_result_message(scam_likelihood, reasoning):
         return (
@@ -68,17 +72,12 @@ class ScamHuntMessages:
             f"*Reasoning:*\n{reasoning}\n\n"
             "Did we get it right?"
         )
-
     def get_screenshot_confirmation_message(scam_likelihood):
         return (
-            "🎉 *Great job, hunter!*\n"
-            "Thank you for hunting this down.\n\n" if scam_likelihood > 80 else "False alarm, but great instincts!\n\n"
-            "🚨 This is very likely a scam.\n\n" if scam_likelihood > 80 else "🔶 This is not likely a scam.\n\n"
+            f"🎉 *Great job, hunter!*\n"
+            f"{'Thank you for hunting this down.' if scam_likelihood > 80 else 'False alarm, but great instincts!'}\n\n"
+            f"{'🚨 This is very likely a scam.' if scam_likelihood > 80 else '🔶 This is not likely a scam.'}\n\n"
             "Remember,\n"
             "🕵️ If you spot a suspicious post, don't just ignore it — report it!\n"
             "Let's keep going! 💪"
         )
-
-    not_a_screenshot_message: str = (
-        "Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again."
-    )
