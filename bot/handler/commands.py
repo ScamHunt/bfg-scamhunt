@@ -64,6 +64,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = onboarding_messages.get_message(state=state)
     await update.message.reply_text(message.text, reply_markup=message.keyboard)
 
+
 @is_banned
 async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /feedback command."""

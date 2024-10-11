@@ -12,6 +12,7 @@ from bot.messages import ScamHuntMessages as messages
 
 # Initialize the ScamHuntMessages class
 
+
 class CallbackData:
     CANCEL = "cancel"
     CONFIRM = "confirm"
