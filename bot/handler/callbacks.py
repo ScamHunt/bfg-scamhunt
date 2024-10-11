@@ -103,9 +103,6 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     scam_likelihood = result.scam_likelihood
 
-    context.user_data["confirmation_message"] = (
-        messages.get_screenshot_confirmation_message(scam_likelihood=scam_likelihood)
-    )
     await message.edit_text(
         text=messages.get_screenshot_result_message(
             scam_likelihood, reasoning=result.reasoning
@@ -143,13 +140,16 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         r = report.create_report(r)
         track_user_event(update, context, Event.REPORT_CREATED)
 
-        if not is_duplicate:
-            embed_result = await get_embedding(f"{result.caption} {result.description}")
-            embeddings.insert_embedding(embed_result.embedding, r.id)
-            await create_image_hash(
-                image, report_id=r.id, user_id=update.effective_user.id
+        embed_result = await get_embedding(f"{result.caption} {result.description}")
+        similar_embedings = embeddings.search_embeddings(embed_result.embedding)
+        context.user_data["confirmation_message"] = (
+            messages.get_screenshot_confirmation_message(
+                scam_likelihood=scam_likelihood, similar=similar_embedings
             )
-            await upload_img_to_supabase(image, update.effective_user.id, r.id)
+        )
+        embeddings.insert_embedding(embed_result.embedding, r.id)
+        await create_image_hash(image, report_id=r.id, user_id=update.effective_user.id)
+        await upload_img_to_supabase(image, update.effective_user.id, r.id)
 
     except Exception as err:
         logging.error(f"Report created without embedding or id: {err}")

@@ -72,11 +72,13 @@ class ScamHuntMessages:
             f"*Reasoning:*\n{reasoning}\n\n"
             "Did we get it right?"
         )
-    def get_screenshot_confirmation_message(scam_likelihood):
+
+    def get_screenshot_confirmation_message(scam_likelihood, similar):
         return (
             f"🎉 *Great job, hunter!*\n"
             f"{'Thank you for hunting this down.' if scam_likelihood > 80 else 'False alarm, but great instincts!'}\n\n"
             f"{'🚨 This is very likely a scam.' if scam_likelihood > 80 else '🔶 This is not likely a scam.'}\n\n"
+            f"🔍 We've found {len(similar)} similar scams in our Database!\n\n"
             "Remember,\n"
             "🕵️ If you spot a suspicious post, don't just ignore it — report it!\n"
             "Let's keep going! 💪"
