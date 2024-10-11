@@ -55,33 +55,24 @@ async def create_image_hash(file, report_id, user_id):
     insert_image_hash(ImageHash(hash=hash, report_id=report_id, user_id=user_id))
 
 
-def hash_exists(hash: str, user_id=None) -> None | str:
+def get_similar_images(
+    hash: str,
+) -> None | str:
     try:
-        if user_id:
-            data = (
-                supabase.table("image_hash")
-                .select("*")
-                .eq("user_id", user_id)
-                .eq("hash", hash)
-                .limit(1)
-                .execute()
-            )
-        else:
-            data = (
-                supabase.table("image_hash")
-                .select("*")
-                .eq("hash", hash)
-                .limit(1)
-                .execute()
-            )
-        ih = ImageHash.from_dict(data.data[0])
-        return get_report(ih.report_id) if data else None
+        data = supabase.rpc(
+            "get_image_hashes_by_hamming_distance",
+            {"target_hash": hash, "distance_threshold": 10},
+        ).execute()
+        similar_images = [h["image_report_id"] for h in data.data]
+        logging.info(f"Found {len(similar_images)} similar images.")
+        return similar_images
     except APIError as e:
         logging.error(f"Error getting user: {e}")
 
 
-async def get_image_report(file, user_id=None):
+async def get_image_report(file):
     image_bytes = await file.download_as_bytearray()
     image = Image.open(BytesIO(image_bytes))
     hash = str(imagehash.crop_resistant_hash(image))
-    return hash_exists(hash)
+    images = get_similar_images(hash)
+    return get_report(images[0]) if images else None
