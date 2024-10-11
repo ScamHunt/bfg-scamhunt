@@ -96,30 +96,20 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 f"Invalid platform: {result.platform}, Is screenshot: {result.is_screenshot}"
             )
             await query.edit_message_text(
-                text="Oops! 🙈 It looks like this isn't a screenshot or we couldn't identify the platform.\n\nPlease try again.",
+                text=messages.not_a_screenshot_message,
                 parse_mode="Markdown",
             )
             return
 
     scam_likelihood = result.scam_likelihood
-    text = (
-        f"{'🚨 Very likely a scam' if scam_likelihood > 80 else '🔶 Not very likely a scam'}\n"
-        f"{'Exercise extreme caution and avoid engaging further.' if scam_likelihood > 80 else 'However, please remain cautious and use your best judgment.'}\n\n"
-        "🙏🏽 Please note: Our analysis system is still in testing, so results may not be 100% accurate.\n\n"
-        f"*Reasoning:*\n{result.reasoning}\n\n"
-        "Did we get it right?"
+
+    context.user_data["confirmation_message"] = (
+        messages.get_screenshot_confirmation_message(scam_likelihood=scam_likelihood)
     )
-    confirmation_message = (
-        "🎉 *Great job, hunter!*\n"
-        f"{'Thank you for hunting this down.\n\n' if scam_likelihood > 80 else 'False alarm, but great instincts!\n\n'}"
-        f"{'🚨 This is very likely a scam.' if scam_likelihood > 80 else '🔶 This is not likely a scam.'}\n\n"
-        "Remember,\n"
-        "🕵️ If you spot a suspicious post, don't just ignore it — report it!\n"
-        "Let's keep going! 💪"
-    )
-    context.user_data["confirmation_message"] = confirmation_message
     await message.edit_text(
-        text=text,
+        text=messages.get_screenshot_result_message(
+            scam_likelihood, reasoning=result.reasoning
+        ),
         parse_mode="Markdown",
         reply_markup=get_inline_keyboard_for_scam_result(),
     )
