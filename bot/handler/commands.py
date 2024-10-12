@@ -5,7 +5,8 @@ from bot.messages import ScamHuntMessages as messages
 
 from bot.onboarding.onboarding import onboarding_messages, OnboardingStates
 
-from bot.db.user import create_user_if_not_exists
+from bot.db.user import create_user_if_not_exists, get_user
+from bot.db.report import get_leaderboard
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bot.user_metrics import track_user_event, Event
@@ -76,3 +77,13 @@ async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.callback_query.message.edit_text(
             message.text, reply_markup=message.keyboard
         )
+
+@is_banned
+async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    leaderboard = get_leaderboard()[:10]
+    leaderboard_text = "Leaderboard:\n" if leaderboard else "No reports have been made yet.\n"
+    for entry in leaderboard:
+        user, _ = get_user(entry["user_id"])
+        user.username = user.username or user.first_name or user.last_name or '******'
+        leaderboard_text += f"👑 {user.username[:-2] + '**'}: {entry['report_count']} reports\n"
+    await update.message.reply_text(leaderboard_text)
