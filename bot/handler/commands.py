@@ -6,7 +6,7 @@ from bot.messages import ScamHuntMessages as messages
 from bot.onboarding.onboarding import onboarding_messages, OnboardingStates
 
 from bot.db.user import create_user_if_not_exists, get_user
-from bot.db.report import get_leaderboard
+from bot.db.report import get_leaderboard, get_reports_by_user
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bot.user_metrics import track_user_event, Event
@@ -80,6 +80,7 @@ async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @is_banned
 async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    track_user_event(update, context, Event.LEADERBOARD)
     leaderboard = get_leaderboard()[:10]
     leaderboard_text = "Leaderboard:\n" if leaderboard else "No reports have been made yet.\n"
     for entry in leaderboard:
@@ -87,3 +88,24 @@ async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user.username = user.username or user.first_name or user.last_name or '******'
         leaderboard_text += f"👑 {user.username[:-2] + '**'}: {entry['report_count']} reports\n"
     await update.message.reply_text(leaderboard_text)
+
+async def mystats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle /mystats command."""
+    track_user_event(update, context, Event.MY_STATS)
+    user_id = update.effective_user.id
+    reports = get_reports_by_user(user_id)
+    if not reports:
+        await update.message.reply_text("You haven't submitted any reports yet.")
+    else:
+        stats_message = "Your Stats:\n"
+        total_reports = len(reports)
+        correct_reports = sum(1 for report in reports if report.correctness == "yes")
+        incorrect_reports = sum(1 for report in reports if report.correctness == "no")
+        unsure_reports = sum(1 for report in reports if report.correctness == "unsure")
+        pending_reports = sum(1 for report in reports if report.correctness is None)
+        stats_message += f"Total Reports: {total_reports}\n"
+        stats_message += f"Correct Reports: {correct_reports}\n"
+        stats_message += f"Incorrect Reports: {incorrect_reports}\n"
+        stats_message += f"Unsure Reports: {unsure_reports}\n"
+        stats_message += f"Pending Reports: {pending_reports}"
+        await update.message.reply_text(stats_message)
