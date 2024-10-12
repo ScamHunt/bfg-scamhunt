@@ -119,7 +119,22 @@ def get_reports_by_user(user_id: int) -> list[Report]:
     except TypeError as e:
         logging.error(f"Error getting reports by user: {e}")
 
-
+def get_leaderboard():
+    try:
+        data = (
+            supabase.table("report")
+            .select("created_by_tg_id, created_by_tg_id.count()")
+            .execute()
+        )
+        leaderboard = sorted(data.data, key=lambda x: x["count"], reverse=True)
+        formatted_leaderboard = [{"user_id": entry["created_by_tg_id"], "report_count": entry["count"]} for entry in leaderboard]
+        logging.info("Leaderboard data fetched successfully")
+        return formatted_leaderboard
+    except APIError as e:
+        logging.error(f"Error getting leaderboard: {e}")
+    except TypeError as e:
+        logging.error(f"Error getting leaderboard: {e}")
+        
 def update_report_correctness(report_id: int, correctness: str):
     try:
         supabase.table("report").update({"correctness": correctness}).eq(

@@ -66,6 +66,7 @@ def main():
     application.add_handler(CommandHandler("start", commands.start))
     application.add_handler(CommandHandler("help", commands.help))
     application.add_handler(CommandHandler("learn", commands.learn))
+    application.add_handler(CommandHandler("leaderboard", commands.leaderboard))
 
     # Error handler
     application.add_error_handler(utils.error)
