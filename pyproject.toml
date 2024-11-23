@@ -40,6 +40,9 @@ zstandard = "0.22.0"
 openai = "^1.46.0"
 supabase = "^2.7.4"
 amplitude-analytics = "^1.1.4"
+fastapi = "^0.115.5"
+uvicorn = "^0.32.0"
+python-multipart = "^0.0.17"
 
 
 [build-system]
