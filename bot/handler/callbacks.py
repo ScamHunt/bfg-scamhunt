@@ -25,6 +25,7 @@ from bot.db.image_hash import create_image_hash, get_image_report
 from bot.handler.utils import get_inline_keyboard_for_scam_result
 from bot.db.report import update_report_correctness
 from bot.db.user import is_banned
+import mimetypes
 
 
 @is_banned
@@ -89,7 +90,10 @@ async def confirm_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     is_duplicate = True if result else False
     if not result:
         # If no report is found, attempt OCR
-        result, exception = await ocr_image(image)
+        file_mimetype = mimetypes.guess_type(image.file_path)
+        image_bytes = await image.download_as_bytearray()
+        img_type = file_mimetype[0]
+        result = await ocr_image(image_bytes, img_type)
         result.scam_types = [scam_type.dict() for scam_type in result.scam_types]
         if not result.is_screenshot or result.platform == Platform.UNKNOWN:
             logging.error(

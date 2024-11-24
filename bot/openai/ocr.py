@@ -77,10 +77,10 @@ def img_to_base64(img_bytes: bytes) -> str:
     return base64.b64encode(img_bytes).decode("utf-8")
 
 
-async def ocr_image(file) -> (Screenshot, Exception):
-    file_mimetype = mimetypes.guess_type(file.file_path)
-    image_bytes = await file.download_as_bytearray()
-    img_type = file_mimetype[0]
+async def ocr_image(image_bytes: bytes, img_type: str) -> Screenshot:
+    # file_mimetype = mimetypes.guess_type(file.file_path)
+    # image_bytes = await file.download_as_bytearray()
+    # img_type = file_mimetype[0]
     compressed_image = compress_image(image_bytes, img_type)
     img_b64_str = img_to_base64(compressed_image)
     try:
@@ -103,8 +103,7 @@ async def ocr_image(file) -> (Screenshot, Exception):
             timeout=30,
             response_format=Screenshot,
         )
-        out = response.choices[0].message.parsed
-        return (out, None)
+        return response.choices[0].message.parsed
     except Exception as e:
         logger.error(f"Error analyzing image: {e}")
-        return (None, e)
+        raise e
