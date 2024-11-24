@@ -13,7 +13,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 def run_api():
     """Run the FastAPI server in a separate thread"""
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
 
 def run_bot():
     """Run the Telegram bot in the main thread"""
