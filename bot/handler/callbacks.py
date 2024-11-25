@@ -26,6 +26,8 @@ from bot.handler.utils import get_inline_keyboard_for_scam_result
 from bot.db.report import update_report_correctness
 from bot.db.user import is_banned
 import mimetypes
+import os
+
 
 
 @is_banned
@@ -167,18 +169,22 @@ async def send_confirmation_message(
     confirmation_message: str = messages.confirm,
 ):
     await update.callback_query.edit_message_text(
+        text=update.callback_query.message.text.replace("\nDid we get it right?", ""),
+    )
+    await context.bot.send_message(
+        chat_id=context._chat_id,
         text=confirmation_message,
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Hunt on Facebook", url="https://www.facebook.com"
+                        "Hunt on Facebook", url=os.getenv("FACEBOOK_URL", "https://www.facebook.com")
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "Hunt on Instagram", url="https://www.instagram.com"
+                        "Hunt on Instagram", url=os.getenv("INSTAGRAM_URL", "https://www.instagram.com")
                     )
                 ],
                 [
