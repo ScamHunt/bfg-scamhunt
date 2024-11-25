@@ -71,12 +71,11 @@ async def feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /feedback command."""
     context.user_data["state"] = FeedbackStates.FEEDBACK_SCORE
     message = feedback_messages.get_message(state=context.user_data["state"])
-    if update.message:
-        await update.message.reply_text(message.text, reply_markup=message.keyboard)
-    else:
-        await update.callback_query.message.edit_text(
-            message.text, reply_markup=message.keyboard
-        )
+    await context.bot.send_message(
+        chat_id=context._chat_id,
+        text=message.text,
+        reply_markup=message.keyboard
+    )
 
 @is_banned
 async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
