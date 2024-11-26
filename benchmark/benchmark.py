@@ -29,12 +29,12 @@ async def benchmark():
 
 
 async def run_iteration(dataset) -> list[dict]:
-    results = []
+    results = {}
     for item in dataset:
         start_time = time.time()
         result = await process_item(item)
         result["time"] = time.time() - start_time
-        results.append(result)
+        results[item.image] = result
     return results
 
 
