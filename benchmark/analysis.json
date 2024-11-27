@@ -1,0 +1,114 @@
+{
+  "1": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "phishing": 5
+    }
+  },
+  "2": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "investment": 5
+    }
+  },
+  "3": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "e-commerce": 0,
+      "phishing": 5
+    }
+  },
+  "4": {
+    "scam_detected": 4,
+    "scam_categories": {
+      "e-commerce": 0,
+      "phishing": 5
+    }
+  },
+  "5": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "e-commerce": 2
+    }
+  },
+  "6": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "investment": 4,
+      "love": 0
+    }
+  },
+  "7": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "phishing": 5
+    }
+  },
+  "8": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "phishing": 5
+    }
+  },
+  "9": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "investment": 5
+    }
+  },
+  "10": {
+    "scam_detected": 4,
+    "scam_categories": {
+      "love": 0
+    }
+  },
+  "11": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "love": 0
+    }
+  },
+  "12": {
+    "scam_detected": 5,
+    "scam_categories": {
+      "loan": 3
+    }
+  },
+  "13": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "14": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "15": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "16": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "17": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "18": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "19": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "20": {
+    "scam_detected": 0,
+    "scam_categories": {}
+  },
+  "metrics": {
+    "true_positives": 58,
+    "false_positives": 1,
+    "false_negatives": 2
+  }
+}
