@@ -77,12 +77,17 @@ def img_to_base64(img_bytes: bytes) -> str:
     return base64.b64encode(img_bytes).decode("utf-8")
 
 
-async def ocr_image(image_bytes: bytes, img_type: str) -> Screenshot:
+async def ocr_image(image_bytes: bytes, img_type: str, compress: bool = True) -> Screenshot:
     # file_mimetype = mimetypes.guess_type(file.file_path)
     # image_bytes = await file.download_as_bytearray()
     # img_type = file_mimetype[0]
-    compressed_image = compress_image(image_bytes, img_type)
-    img_b64_str = img_to_base64(compressed_image)
+
+    if compress:
+        compressed_image = compress_image(image_bytes, img_type)
+        img_b64_str = img_to_base64(compressed_image)
+    else:
+        img_b64_str = img_to_base64(image_bytes)
+
     try:
         response = client.beta.chat.completions.parse(
             model="gpt-4o-2024-08-06",  # earlier models dont support structured outputs

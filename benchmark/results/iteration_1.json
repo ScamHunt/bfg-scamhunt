@@ -1,0 +1,573 @@
+{
+    "results": {
+        "1": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image appears to be a screenshot with two sections. At the top, it shows a text message claiming to be from Costco Wholesale, stating that annual rewards are ready to be deposited and providing a URL link: \"https://wholesalecostco.ca\". Below it, there's a web page mockup displaying the Costco logo, offering a supposed 2% cash reward, with options to 'Redeem Here'. There's a timestamp for the last update and some navigation/feedback options.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The text message and webpage mimic Costco branding but use a suspicious URL that is not associated with the official Costco website. The claim of rewards, the urgency to click the link, and the layout mimicking legitimate branding are typical of phishing scams. There's no identifying information about the sender, enhancing the likelihood of it being fraudulent.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 95
+                }
+            ],
+            "links": [
+                "https://wholesalecostco.ca"
+            ],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 6.598407983779907
+        },
+        "2": {
+            "from_user": "KIMBERLY.__.WALTER",
+            "to_user": null,
+            "caption": null,
+            "description": "An image shows fake financial app-like UI with account information. The @KIMBERLY.__.WALTER handle is prominently featured. It claims a $2000 investment returned $20000 in 3 hours through crypto mining.",
+            "location": null,
+            "platform": "instagram",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The post promises extremely high returns in a very short time with little context, a common indicator of investment scams. The unrealistic profit and emphasis on crypto mining further raise suspicion. The use of an Instagram handle instead of a verifiable entity suggests phishing.",
+            "scam_types": [
+                {
+                    "scam_type": "investment",
+                    "score": 90
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 6.9249489307403564
+        },
+        "3": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image displays two screenshots of text message conversations. \n\n- The left image shows a message saying, \"Your item could not be delivered because the address could not be verified. Please enter a valid address:\" followed by a link \"https://lihi.cc/mQ92b\". The sender is from a phone number with the country code \"+65\". The message was sent on Saturday, 4th November at 10:34 AM. The message is part of a chat with 122 messages.\n\n- The right image shows a message saying, \"Hi! Delivery failed due to incomplete address. To book a redelivery, visit lihi1.com/uk5K8 and update details. Thanks for ensuring a smooth delivery process!\" This message also comes from a number with the \"+65\" country code. It's part of a chat that includes 231 messages. The message was sent on Tuesday at 2:10 PM.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The messages contain suspicious traits often associated with scams:\n1. They urge the user to click on unfamiliar short links, which is a common phishing tactic.\n2. They create a sense of urgency regarding undelivered packages.\n3. They use generic language typical in phishing attempts.\n4. They are unsolicited messages from unknown sources.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 95
+                }
+            ],
+            "links": [
+                "https://lihi.cc/mQ92b",
+                "http://lihi1.com/uk5K8"
+            ],
+            "phone_numbers": [
+                "+65"
+            ],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 14.04777216911316
+        },
+        "4": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "A text message screenshot showing a conversation between two people. It starts with a message from someone saying 'Hi' and 'I'm Nann, are you Darius??' followed by apologies for a misspelled number. The other person responds with polite replies, eventually saying 'Nope, I'm not' and 'It's fine.' The conversation seems like an attempt to strike a casual and friendly conversation.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 90,
+            "reasoning": "The conversation starts with an introduction mistake, which is a common tactic in phishing and social engineering. It quickly shifts to building a rapport by suggesting becoming friends. This is indicative of a potential scam, often leading to the extraction of personal information or emotional manipulation. Lack of specific identifiers and a friendly but vague tone heighten suspicion.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 100
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 10.465999126434326
+        },
+        "5": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image has a Facebook post titled \"Closing the central warehouse in Singapore\" with a verification badge next to the title. The post mentions SHEIN offering products in mystery boxes to anyone who completes a survey, due to products being stored for over six months. Items will be sent to those who complete the survey by September 30th. Below the text, there's a photo of a building with the SHEIN logo and piles of products outside labeled as liquidation boxes being sold for $1.00.",
+            "location": "Singapore",
+            "platform": "facebook",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The post displays a few red flags typical of scams: it promises products for free in exchange for completing a survey, which is unrealistic. It also creates a sense of urgency by providing a deadline of September 30th, a common tactic to pressure users. The mention of products stored for over six months and being on liquidation at a suspiciously low price further indicates a potential scam. The post likely aims to gather personal information under false pretenses.",
+            "scam_types": [
+                {
+                    "scam_type": "e-commerce",
+                    "score": 90
+                },
+                {
+                    "scam_type": "phishing",
+                    "score": 10
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 18.183260917663574
+        },
+        "6": {
+            "from_user": "silvestorfinancials",
+            "to_user": null,
+            "caption": null,
+            "description": "A social media profile page showing an account named 'silvestorfinancials'. The bio states that they provide 'Investing Service' and 'We build financial strategies to help small businesses grow and succeed \ud83d\udcb0\ud83d\udcc8'. The profile has 14 posts, 16 followers, and 115 following. The profile picture and several photos showing a woman in various settings are visible.",
+            "location": null,
+            "platform": "instagram",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 90,
+            "reasoning": "The account claims to provide financial strategies yet has a very low number of followers, which is atypical of a legitimate financial service provider. The emphasis on growth and success, accompanied by emojis, can be indicative of a scam by promising high returns. The content is not backed up by sufficient detail or credibility indicators, and the account may be attempting to appear more professional than it actually is.",
+            "scam_types": [
+                {
+                    "scam_type": "investment",
+                    "score": 90
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 16,
+            "comments": 0,
+            "shares": 0,
+            "time": 7.824764013290405
+        },
+        "7": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a screenshot of a text conversation between two people. The conversation includes a person asking for help logging into their Instagram account on a new phone. They request the other person to receive a 'help link.'",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The phrase 'help me receive a help link' is commonly used in phishing scams to gain unauthorized access to accounts. The urgency for help and the plausible scenario of needing access to a service is a common tactic.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 95
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 5.013049840927124
+        },
+        "8": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a screenshot of what appears to be a notification or message about a suspicious sign-in attempt to a Snapchat account from an IP address in Lubbock, Texas. It instructs the recipient, if they did not attempt to sign in, to reply with a 6-digit reset code provided a separate notification. It mentions Snapchat Privacy Center.",
+            "location": "Lubbock, Texas",
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "This message resembles a phishing attempt due to the request for a 6-digit reset code, a common tactic for accessing personal accounts. The message creates urgency by mentioning suspicious activity, which is also typical of scams. The inclusion of a specific IP address and location can make it seem more legitimate, but the request for personal information (the code) is a strong scam indicator.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 95
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 6.845649242401123
+        },
+        "9": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "A WhatsApp chat showing a conversation about an investment opportunity. The text mentions investing $60,000 and earning $30,000. It suggests passing identity authentication to buy Bitcoin or ETH. The chat has timestamps but no visible usernames or personal details.",
+            "location": null,
+            "platform": null,
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The message displays hallmarks of an investment scam: claims of quick and significant returns, lack of concrete information about the investment, and a focus on identity authentication. The vague reference to a 'panda' for identity verification is suspicious.",
+            "scam_types": [
+                {
+                    "scam_type": "investment",
+                    "score": 100
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 5.835474014282227
+        },
+        "10": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a screenshot of a text message conversation on a phone screen. The conversation includes several texts going back and forth between two people. One person expresses interest in visiting Harriman State Park and mistakenly addresses the recipient as if they are going together. The recipient is confused about who the person is, but remains polite. The person then introduces themselves as \"Ginny\" and offers to send pictures of the park.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 90,
+            "reasoning": "The message starts with an unexpected invitation to a park, which can be seen as a common tactic used in phishing scams to engage strangers by catching their interest. It employs a casual, friendly tone to disarm the recipient. The sender quickly reveals they have the wrong number, but continues the conversation, which could be an attempt to establish rapport. The level of detail about their personal information and eagerness to share more feels intrusive and raises suspicion. This type of approach can often lead to requests for personal information or money.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 100
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 9.088364124298096
+        },
+        "11": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image shows a conversation between two individuals on a messaging app. The initial message asks a person named Nisya to deliver a dress to an office. The recipient responds indicating a wrong number before introducing themselves as Brandon. The sender apologizes, explaining they saved the wrong number, and requests the recipient's name.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 90,
+            "reasoning": "The conversation is likely part of a scam attempt due to its classic pattern where a wrong number leads to building trust and eventual scamming. The conversation begins with a setup, and name exchange is used to build rapport. Such tactics are often seen in phishing or e-commerce scams.",
+            "scam_types": [
+                {
+                    "scam_type": "phishing",
+                    "score": 90
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 11.189369916915894
+        },
+        "12": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a screenshot of a WhatsApp chat conversation between two individuals. The discussion involves one person asking for a financial contribution to sponsor a project, mentioning they need about $3000. They discuss taking loans and mention sending money through Western Union. The recipient name for the transaction is given as \"Williams Mike Leo.\" The chat uses different text colors for each participant, with timestamps for each message.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 95,
+            "reasoning": "The post exhibits several red flags typical of scams: a request for a large sum of money ($3000), proposing Western Union for the transaction, which is often used in scams for its anonymity, an urgent plea for funds stating complete reliance on the contributor, and offering no tangible, verifiable reasons or guarantees. Additionally, there is an odd choice of words and grammar, characteristic of scam attempts. These factors contribute to a high likelihood of it being a scam.",
+            "scam_types": [
+                {
+                    "scam_type": "loan",
+                    "score": 95
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 13.030912160873413
+        },
+        "13": {
+            "from_user": "mothershipsg",
+            "to_user": null,
+            "caption": "Looks like a real fur-filling weekend \ud83d\udc31... more",
+            "description": "A social media post promoting the 'S'pore Cat Festival' with carnival games, adoption drives, and a cat-themed marketplace, taking place Dec. 7\u20138 at S'pore Expo. The image features a cat being held by a person, with colorful text overlaid on the photo.",
+            "location": "S'pore Expo",
+            "platform": "instagram",
+            "is_advertisement": false,
+            "is_sponsored": false,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": false,
+            "scam_likelihood": 0,
+            "reasoning": "The post advertises a cat festival event, providing a location and date with no requests for personal information, payments, or use of pressure tactics. It is a typical promotional post with no apparent scam indicators.",
+            "scam_types": [],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 6876,
+            "comments": 0,
+            "shares": 0,
+            "time": 7.5758957862854
+        },
+        "14": {
+            "from_user": null,
+            "to_user": null,
+            "caption": null,
+            "description": "An advertisement for 'Tiger Brokers' offering up to 6 months commission-free trading on CBA. The ad promises a trading limit of over SGD 20,000 and a chance to win up to 17 Nvidia shares. It includes a 'Get Started' button and an image of a mobile device displaying a trading app interface. The bottom line reads: '*T&Cs apply. Not financial advice. Investment involves risk.'",
+            "location": null,
+            "platform": null,
+            "is_advertisement": true,
+            "is_sponsored": false,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 85,
+            "reasoning": "The promises of high trading limits and winning Nvidia shares may be enticing but could potentially mislead users about the actual risks and terms involved. The absence of detailed terms and conditions and an emphasis on quick gains increase the scam likelihood. However, the presence of a legitimate website (itiger.com) lowers the risk.",
+            "scam_types": [
+                {
+                    "scam_type": "investment",
+                    "score": 90
+                }
+            ],
+            "links": [
+                "itiger.com/sg"
+            ],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 7.571177959442139
+        },
+        "15": {
+            "from_user": "FARFETCH",
+            "to_user": null,
+            "caption": "Enjoy an extra 20% off on selected sale items, plus free shipping. Your favorite designers on running. FARFETCH free returns. Black Friday is here. Shop now.",
+            "description": "An advertisement by FARFETCH, promoting 20% off on selected sale items with free shipping. The image includes a blue running shoe and mentions 'YOUR FAVOURITE DESIGNERS.' It highlights Black Friday and free returns, with a 'Shop now' button. The platform interface suggests it's a Facebook sponsored post with 10k likes.",
+            "location": null,
+            "platform": "facebook",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 15,
+            "reasoning": "The post is a sponsored ad by a verified account (FARFETCH) on Facebook, promoting a sale with realistic offers and no suspicious links or requests for personal information. It uses professional language and trusted branding, lowering the scam likelihood.",
+            "scam_types": [],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 10000,
+            "comments": 0,
+            "shares": 0,
+            "time": 8.172927856445312
+        },
+        "16": {
+            "from_user": "nowcircular",
+            "to_user": null,
+            "caption": "\ud83c\udf89 Black Friday deal is here! Enjoy exclusive 1-month FREE subscription on all devices with code BLACKFRIDAY\n\nFrom the latest iPhone, Samsung Galaxy, and MacBook, to powerful PS5 Pro, iPad, and premium AirPods, we\u2019ve got everything you need to level up your tech \ud83d\udca5\n\nThis limited-time offer is too good to last. Act fast and grab premium tech with Circular now \ud83d\ude80",
+            "description": "The image shows a social media post titled 'BLACK FRIDAY DEAL' offering '1 MONTH FREE ON ALL DEVICES' with a promo code 'BLACKFRIDAY'. It is visually highlighted with images of popular tech products like an iPhone, PlayStation, and AirPods. The background is vibrant with purple and black tones. It's a promotional post with emphasis on the limited-time offer and free subscription, suggesting urgency to the viewer.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 70,
+            "reasoning": "The post offers a one-month free subscription on all devices, which can be enticing and may suggest an unrealistic promise. The emphasis on 'limited-time offer' can create urgency, a common tactic used in scams. However, the presence of an official-looking logo and sponsorship might suggest legitimacy, but without further verification, there's a moderate likelihood of being a scam.",
+            "scam_types": [
+                {
+                    "scam_type": "e-commerce",
+                    "score": 100
+                }
+            ],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 10.705180168151855
+        },
+        "17": {
+            "from_user": "Prime In...",
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a screenshot of a social media post by a user with the handle @PrimeInte... offering an AI service with H100s for $1.64/hr. It describes the advantages as 100% self-serve and quick deployment. The post has a call to action with the 'Get Started' button and mentions a website, primeintellect.ai. Engagement metrics are shown below the post.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 20,
+            "reasoning": "The post offers a technological service at a low price, which could be genuine, especially if the organization is legitimate. The professional presentation and lack of urgent language reduce the likelihood of a scam. However, due diligence is always recommended for online offerings.",
+            "scam_types": [],
+            "links": [
+                "primeintellect.ai"
+            ],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 755,
+            "comments": 7,
+            "shares": 73,
+            "time": 10.204767942428589
+        },
+        "18": {
+            "from_user": "u/huggyhuge",
+            "to_user": null,
+            "caption": null,
+            "description": "The image is a Reddit post involving a promoted ad by the user 'u/huggyhuge'. It features a product called Weglot, which offers multilingual website translation. The ad promises a fully translated site displayed in minutes with AI and human review. It lists compatible platforms like Webflow, WordPress, Shopify, and more. The post includes a website link 'weglot.com' and encourages users to 'Get started for free'.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": false,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 20,
+            "reasoning": "The post appears to be a legitimate advertisement for Weglot, a known service providing website translation. It doesn't promise unrealistic results and uses professional language. However, vigilance towards the provided links and services is advised, as common tactics involve mimicking legitimate services.",
+            "scam_types": [],
+            "links": [
+                "weglot.com"
+            ],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 16,
+            "comments": 5,
+            "shares": 0,
+            "time": 7.75593900680542
+        },
+        "19": {
+            "from_user": "McDSG",
+            "to_user": null,
+            "caption": null,
+            "description": "The image is an advertisement for a McDonald's product called 'Mala Chicken McCrispy'. It features an image of crispy chicken pieces and a button that says 'Order Now'. The McDonald's logo is present in the upper-right corner. The post is marked as 'Sponsored'.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": true,
+            "is_screenshot": true,
+            "scam_likelihood": 10,
+            "reasoning": "The image appears to be a legitimate advertisement from McDonald's for a food product. There's no indication of unrealistic promises, pressure tactics, or suspicious links associated with common online scams. The brand logo and formal product presentation support its authenticity.",
+            "scam_types": [],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 274,
+            "comments": 80,
+            "shares": 0,
+            "time": 8.299766063690186
+        },
+        "20": {
+            "from_user": "Tropicfeel Backpacks",
+            "to_user": null,
+            "caption": null,
+            "description": "The image is an advertisement from Tropicfeel Backpacks. It features an open black backpack with clothing and electronics neatly organized inside. The backdrop is a solid beige color, and there is text stating \"Up to 40% BLACK FRIDAY\". A button labeled \"GET OFFER\" is prominently displayed, indicating a call to action for the viewer to take advantage of the sale.",
+            "location": null,
+            "platform": "unknown",
+            "is_advertisement": true,
+            "is_sponsored": true,
+            "is_social_media_post": true,
+            "is_video": false,
+            "is_photo": false,
+            "is_screenshot": true,
+            "scam_likelihood": 10,
+            "reasoning": "The advertisement appears professional and legitimate, with clear branding (Tropicfeel Backpacks) and a common sales promotion (Black Friday). There is no request for personal information or unrealistic claims, which reduces the likelihood of it being a scam.",
+            "scam_types": [],
+            "links": [],
+            "phone_numbers": [],
+            "emails": [],
+            "likes": 0,
+            "comments": 0,
+            "shares": 0,
+            "time": 7.880023956298828
+        }
+    },
+    "iteration": 0,
+    "time": 183.21371984481812
+}
