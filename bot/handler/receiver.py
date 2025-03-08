@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.ext.filters import ChatType
 from telegram.ext import ContextTypes
 
 from bot.messages import ScamHuntMessages as messages
@@ -43,7 +44,7 @@ async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     result = queue.add_links(context.user_data["links"])
     logging.info(f"Added to queue: {result}")
     
-    if update.effective_chat.type == "private":
+    if update.effective_chat.type == ChatType.PRIVATE:
         await update.message.reply_text(
             messages.confirm,
             parse_mode="Markdown",
