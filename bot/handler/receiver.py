@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.ext.filters import ChatType
 from telegram.ext import ContextTypes
 
 from bot.messages import ScamHuntMessages as messages
@@ -9,7 +10,8 @@ from bot.handler.utils import get_inline_cancel_confirm_keyboard
 from bot.extractors import extract_platform, SocialMedia
 from bot.messages import ScamHuntMessages as messages
 from bot.db.user import is_banned
-
+from bot.db import queue
+import logging
 
 @is_banned
 async def phone_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -33,18 +35,20 @@ async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         reply_markup=get_inline_cancel_confirm_keyboard(),
     )
 
-
 @is_banned
 async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a link for a scam."""
     context.user_data["state"] = BotStates.RECEIVE_LINK
     context.user_data["links"] = extract_urls(update)
-    await update.message.reply_text(
-        messages.link_sharing,
-        reply_markup=get_inline_cancel_confirm_keyboard(),
-        parse_mode="Markdown",
-    )
-
+    logging.info(f"Received links: {context.user_data['links']}")
+    result = queue.add_links(context.user_data["links"])
+    logging.info(f"Added to queue: {result}")
+    
+    if update.effective_chat.type == ChatType.PRIVATE:
+        await update.message.reply_text(
+            messages.confirm,
+            parse_mode="Markdown",
+        )
 
 @is_banned
 async def text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
