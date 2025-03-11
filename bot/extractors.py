@@ -19,13 +19,25 @@ def extract_phone_numbers(update: Update) -> tuple[list[str], list[str]]:
     ]
 
 
-def extract_urls(update: Update) -> tuple[list[str], list[str]]:
-    entities = update.message.entities
-    urls = [
-        update.message.text[entity.offset : entity.offset + entity.length]
-        for entity in entities
-        if entity.type == "url"
-    ]
+def extract_urls(update: Update) -> list[str]:
+    urls = []
+    
+    # Handle regular message with text and entities
+    if update.message.text and update.message.entities:
+        urls.extend([
+            update.message.parse_entity(entity)
+            for entity in update.message.entities
+            if entity.type == "url"
+        ])
+    
+    # Handle forwarded message with caption and caption_entities
+    if update.message.caption and update.message.caption_entities:
+        urls.extend([
+            update.message.parse_caption_entity(entity)
+            for entity in update.message.caption_entities 
+            if entity.type == "url"
+        ])
+
     return urls
 
 

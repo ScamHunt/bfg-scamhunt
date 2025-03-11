@@ -1,4 +1,3 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -40,6 +39,15 @@ def main():
     application = Application.builder().token(bot_token).build()
 
     application.add_handler(CallbackQueryHandler(callbacks.button))
+
+    # Handle forwarded messages in both private chats and groups
+    application.add_handler(
+        MessageHandler(
+            filters.FORWARDED,
+            receiver.link,
+        )
+    )
+
 
     # Handle Links
     application.add_handler(
