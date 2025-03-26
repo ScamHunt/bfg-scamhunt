@@ -35,6 +35,7 @@ class User:
         self.first_name = first_name
         self.last_name = last_name
         self.feedback = Feedback()
+        
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -61,6 +62,7 @@ class User:
             "score_why": self.feedback.score_why,
         }
 
+supabase = supabase.schema('public')
 
 def create_user(user: User) -> (User, Exception):
     new = user.to_dict()

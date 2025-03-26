@@ -6,6 +6,7 @@ from typing import Optional
 from datetime import datetime
 from ..openai.ocr import ScamType, Screenshot, Platform
 
+supabase = supabase.schema('public')
 
 class Report:
     """Structure of a scam report."""
@@ -69,14 +70,19 @@ class Report:
         return cls(**data)
 
     @classmethod
-    def from_screenshot(self, screenshot: Screenshot, created_by_tg_id: int):
-        self.created_by_tg_id = created_by_tg_id
+    def from_screenshot(cls, screenshot: Screenshot, created_by_tg_id: int):
+        cls.created_by_tg_id = created_by_tg_id
         for key, value in screenshot.model_dump().items():
-            setattr(self, key, value)
+            setattr(cls, key, value)
+        return cls
 
+    @classmethod
+    def to_dict(cls):
+        new = cls.__dict__.copy()
+        return new
 
 def create_report(report: Report) -> Report:
-    new = report.__dict__
+    new = report.__dict__.copy()
     del new["id"]
     del new["created_at"]
     try:
@@ -84,6 +90,7 @@ def create_report(report: Report) -> Report:
         return Report.from_dict(data.data[0])
     except APIError as e:
         logging.error(f"Error creating report: {e}")
+        raise e
 
 
 def get_report(report_id: int) -> Report:

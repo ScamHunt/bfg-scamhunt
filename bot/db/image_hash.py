@@ -8,7 +8,7 @@ import imagehash
 from typing import Optional
 from datetime import datetime
 
-
+supabase = supabase.schema('public')
 class ImageHash:
     def __init__(
         self,
