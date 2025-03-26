@@ -2,7 +2,7 @@ from .supabase import supabase
 import logging
 from pydantic import BaseModel
 
-
+supabase = supabase.schema('public')
 class Embedding(BaseModel):
     id: int
     similarity: float

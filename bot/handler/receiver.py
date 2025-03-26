@@ -38,13 +38,13 @@ async def screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 @is_banned
 async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle when user sends a link for a scam."""
-    context.user_data["state"] = BotStates.RECEIVE_LINK
+    print(update)
     context.user_data["links"] = extract_urls(update)
     logging.info(f"Received links: {context.user_data['links']}")
-    result = queue.add_links(context.user_data["links"])
+    result = queue.add_links(context.user_data["links"],update)
     logging.info(f"Added to queue: {result}")
     
-    if update.effective_chat.type == ChatType.PRIVATE:
+    if update.effective_chat.type == ChatType:
         await update.message.reply_text(
             messages.confirm,
             parse_mode="Markdown",
